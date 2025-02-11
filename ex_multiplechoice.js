@@ -9,8 +9,8 @@ export const MultipleChoice = {
       const { title, options, submitEvent } = trace.payload;
 
       // Ensure required fields are present
-      if (!title || !options || !submitEvent) {
-        throw new Error("Missing required input variables: title, options, or submitEvent");
+      if (!title || !Array.isArray(options) || options.length === 0 || !submitEvent) {
+        throw new Error("Missing required input variables: title, options (non-empty array), or submitEvent");
       }
 
       const container = document.createElement('div');
