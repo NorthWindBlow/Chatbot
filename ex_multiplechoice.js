@@ -64,12 +64,15 @@ export const MultipleChoice = {
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
           border: none;
-          padding: 1rem 2.4rem;
+          padding: 0.5rem 1.5rem; /* 减小上下 padding */
           border-radius: 8px;
-          font-size: 1.1rem;
+          font-size: 1rem; /* 减小字体大小 */
           cursor: pointer;
           transition: all 0.2s ease;
-          float: right;
+          float: centre;
+          display: block; /* 让按钮居中 */
+          margin: 0 auto; /* 让按钮居中 */
+          width: fit-content; /* 让按钮宽度自适应内容 */
         }
 
         .mc-form button[type="submit"]:hover {
