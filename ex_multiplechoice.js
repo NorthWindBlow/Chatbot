@@ -20,7 +20,7 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           max-width: 680px; /* 限制容器的最大宽度为 680px，确保内容不会过宽。*/
-          margin: 1rem auto; /* 设置容器上下边距为 1rem，左右边距为 auto，使容器水平居中。 */
+          margin: auto auto; /* 设置容器上下边距为 1rem，左右边距为 auto，使容器水平居中。 */
         }
 
         .options-grid {
