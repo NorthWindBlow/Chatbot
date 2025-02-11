@@ -6,11 +6,11 @@ export const MultipleChoice = {
 
   render: ({ trace, element }) => {
     try {
-      const { apiKey, title, options, submitEvent } = trace.payload;
+      const { title, options, submitEvent } = trace.payload;
 
       // Ensure required fields are present
-      if (!apiKey || !title || !options || !submitEvent) {
-        throw new Error("Missing required input variables: apiKey, title, options, or submitEvent");
+      if (!title || !options || !submitEvent) {
+        throw new Error("Missing required input variables: title, options, or submitEvent");
       }
 
       const container = document.createElement('div');
