@@ -8,28 +8,19 @@ export const MultipleChoice = {
     try {
       const { title, options, submitEvent } = trace.payload;
 
-      // Ensure required fields are present
       if (!title || !Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required input variables: title, options (non-empty array), or submitEvent");
       }
 
       const container = document.createElement('div');
-      container.className = 'multiple-choice-container'; // Generic class name
+      container.className = 'multiple-choice-container';
 
-      // HTML structure for the multiple choice form
-      container.innerHTML = `<form id="multiple-choice-form" class="mc-form"></form>`;
-
-      // Style definitions for the component
+      // 简化容器样式
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
           max-width: 680px;
           margin: 1rem auto;
-          padding: 1.5rem;
-          background: #ffffff;
-          border-radius: 12px;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
         }
 
         .options-grid {
@@ -42,16 +33,21 @@ export const MultipleChoice = {
         .option {
           position: relative;
           padding: 1.4rem;
-          background: #f5f5f7;
-          border-radius: 12px;
+          border: 1px solid #d2d2d7;
+          border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s ease;
-          border: 1px solid transparent;
+          background: transparent;
         }
 
         .option:hover {
-          transform: translateY(-2px);
-          background: #eaeafb;
+          background: #f0f0f0 !important;
+        }
+
+        .option.selected {
+          background: #007AFF !important;
+          border-color: #007AFF;
+          color: white;
         }
 
         .option input {
@@ -59,45 +55,8 @@ export const MultipleChoice = {
           position: absolute;
         }
 
-        .option input:checked + .checkmark {
-          opacity: 1;
-          transform: scale(1);
-        }
-
-        .option input:checked ~ .option-text {
-          color: #007AFF;
-        }
-
-        .checkmark {
-          position: absolute;
-          right: 1rem;
-          top: 1rem;
-          width: 24px;
-          height: 24px;
-          background: #007AFF;
-          border-radius: 6px;
-          opacity: 0;
-          transform: scale(0.8);
-          transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .checkmark::after {
-          content: '';
-          position: absolute;
-          left: 7px;
-          top: 3px;
-          width: 7px;
-          height: 12px;
-          border: solid white;
-          border-width: 0 2px 2px 0;
-          transform: rotate(45deg);
-        }
-
         .option-text {
-          font-size: 1.1rem;
-          color: #1d1d1f;
-          transition: color 0.2s ease;
-          padding-right: 2rem;
+          display: block;
           line-height: 1.4;
         }
 
@@ -106,73 +65,56 @@ export const MultipleChoice = {
           color: white;
           border: none;
           padding: 1rem 2.4rem;
-          border-radius: 12px;
+          border-radius: 8px;
           font-size: 1.1rem;
-          font-weight: 500;
           cursor: pointer;
           transition: all 0.2s ease;
           float: right;
-          box-shadow: 0 4px 12px rgba(0,122,255,0.25);
         }
 
         .mc-form button[type="submit"]:hover {
           transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(0,122,255,0.3);
-        }
-
-        .mc-form button[type="submit"]:active {
-          transform: translateY(0);
-          opacity: 0.9;
-        }
-
-        /* 其他选项样式 */
-        .other-input {
-          margin-top: 1.5rem;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .other-input input {
           width: 100%;
           padding: 1rem;
           border: 1px solid #d2d2d7;
-          border-radius: 12px;
-          font-size: 1rem;
-          transition: border-color 0.2s ease;
-        }
-
-        .other-input input:focus {
-          outline: none;
-          border-color: #007AFF;
-          box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
-        }
-
-        /* 禁用状态 */
-        .multiple-choice-container.disabled .option {
-          opacity: 0.6;
-          pointer-events: none;
+          border-radius: 8px;
+          margin-top: 1rem;
         }
       `;
-      
-      container.appendChild(style); // Append style to container
+
+      container.appendChild(style);
       element.appendChild(container);
 
-      const form = container.querySelector('#multiple-choice-form');
+      const form = document.createElement('form');
+      form.className = 'mc-form';
+      container.appendChild(form);
+
       const grid = document.createElement('div');
       grid.className = 'options-grid';
       form.appendChild(grid);
 
-      // Create the checkbox options dynamically
+      // 创建选项
       options.forEach(option => {
         const label = document.createElement('label');
         label.className = 'option';
         label.innerHTML = `
           <input type="checkbox" name="option" value="${option}">
-          <div class="checkmark"></div>
           <span class="option-text">${option}</span>
         `;
+
+        const input = label.querySelector('input');
+        input.addEventListener('change', () => {
+          label.classList.toggle('selected', input.checked);
+        });
+
         grid.appendChild(label);
       });
 
-      // Create other input field (if "Other" option exists)
+      // 其他选项处理
       const hasOtherOption = options.includes("Other");
       let otherInputContainer;
       if (hasOtherOption) {
@@ -183,18 +125,13 @@ export const MultipleChoice = {
         `;
         form.appendChild(otherInputContainer);
 
-        // Add event listener for 'Other' checkbox
         const otherCheckbox = form.querySelector('input[value="Other"]');
         otherCheckbox.addEventListener('change', () => {
-          if (otherCheckbox.checked) {
-            otherInputContainer.style.display = 'block';
-          } else {
-            otherInputContainer.style.display = 'none';
-          }
+          otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
         });
       }
 
-      // Create submit button
+      // 提交按钮
       const submitButton = document.createElement('button');
       submitButton.type = 'submit';
       submitButton.textContent = 'Submit';
@@ -208,9 +145,7 @@ export const MultipleChoice = {
         
         if (hasOtherOption && selectedOptions.includes("Other")) {
           const otherValue = form.querySelector('#other-option').value.trim();
-          if (otherValue) {
-            selectedOptions.push(otherValue);
-          }
+          if (otherValue) selectedOptions.push(otherValue);
         }
 
         if (selectedOptions.length === 0) {
@@ -218,24 +153,11 @@ export const MultipleChoice = {
           return;
         }
 
-        // Disable all checkboxes
-        form.querySelectorAll('input[type="checkbox"]').forEach(input => {
-          input.disabled = true;
-        });
-
-        // Disable "Other" input field (if exists)
-        if (hasOtherOption) {
-          const otherInput = form.querySelector('#other-option');
-          otherInput.disabled = true;
-        }
-
-        // Disable submit button
-        submitButton.disabled = true;
+        // 禁用组件
+        form.querySelectorAll('input, button').forEach(el => el.disabled = true);
         submitButton.textContent = 'Submitted';
         submitButton.style.backgroundColor = '#808080';
-        submitButton.style.cursor = 'not-allowed';
 
-        // Trigger the submit event
         window.voiceflow.chat.interact({
           type: submitEvent,
           payload: {
@@ -247,7 +169,6 @@ export const MultipleChoice = {
 
       form.addEventListener('submit', submitHandler);
 
-      // Cleanup function
       return () => {
         form.removeEventListener('submit', submitHandler);
         container.remove();
