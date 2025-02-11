@@ -18,10 +18,7 @@ export const MultipleChoice = {
       // 简化容器样式
       const style = document.createElement('style');
       style.textContent = `
-        .multiple-choice-container {
-          max-width: 680px;
-          margin: 1rem auto;
-        }
+
 
         .options-grid {
           display: grid;
