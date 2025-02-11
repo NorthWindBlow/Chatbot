@@ -2,42 +2,42 @@ export const MultipleChoice = {
   name: 'MultipleChoice',
   type: 'response',
   match: ({ trace }) =>
-    trace.type === 'Multiple_Choice' || trace.payload.name === 'Multiple_Choice',
-  
+    trace.type === 'multiple_choice' || trace.payload.name === 'multiple_choice',
+
   render: ({ trace, element }) => {
     try {
-      const { VFapiKey } = trace.payload;
+      const { apiKey, title, options, submitEvent } = trace.payload;
 
-      // Ensure VFapiKey is present
-      if (!VFapiKey) {
-        throw new Error("Missing required input variables: VFapiKey");
+      // Ensure required fields are present
+      if (!apiKey || !title || !options || !submitEvent) {
+        throw new Error("Missing required input variables: apiKey, title, options, or submitEvent");
       }
 
       const container = document.createElement('div');
-      container.className = 'distress-selection'; // Added class directly to container
+      container.className = 'multiple-choice-container'; // Generic class name
 
-      // HTML structure for distress selection form
+      // HTML structure for the multiple choice form
       container.innerHTML = `
-        <h3>Select Pavement Distresses:</h3>
-        <form id="distress-form"></form>
+        <h3>${title}</h3>
+        <form id="multiple-choice-form"></form>
       `;
 
       // Style definitions for the component
       const style = document.createElement('style');
       style.textContent = `
-        .distress-selection {
+        .multiple-choice-container {
           max-width: 600px;
           margin: 0 auto;
           padding: 20px;
-          text-align: center;
+          text-align: left;
         }
-        .distress-grid {
+        .options-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
           gap: 10px;
           margin-bottom: 20px;
         }
-        .distress-option {
+        .option {
           display: flex;
           align-items: center;
           padding: 10px;
@@ -45,14 +45,14 @@ export const MultipleChoice = {
           border-radius: 4px;
           cursor: pointer;
         }
-        .distress-option input {
-          margin-right: 10px;
+        .option input {
+          margin-right: 10px; /* Checkbox before text */
         }
         .other-input {
           display: none;
           margin-top: 10px;
         }
-        .distress-selection button {
+        .multiple-choice-container button {
           background: #007bff;
           color: white;
           border: none;
@@ -61,7 +61,7 @@ export const MultipleChoice = {
           cursor: pointer;
           margin-top: 10px;
         }
-        .distress-selection button:hover {
+        .multiple-choice-container button:hover {
           background: #0056b3;
         }
       `;
@@ -69,44 +69,43 @@ export const MultipleChoice = {
 
       element.appendChild(container);
 
-      const form = container.querySelector('#distress-form');
-      const distresses = [
-        "Inspection/ Assessment", "Maintenance Planning", "Maintenance Work", "Quality Management",
-        "Research & Development", "Consultation", "Other"
-      ];
-
-      const grid = document.createElement('div'); // Created grid container
-      grid.className = 'distress-grid';
+      const form = container.querySelector('#multiple-choice-form');
+      const grid = document.createElement('div');
+      grid.className = 'options-grid';
       form.appendChild(grid);
 
       // Create the checkbox options dynamically
-      distresses.forEach(distress => {
+      options.forEach(option => {
         const label = document.createElement('label');
-        label.className = 'distress-option';
+        label.className = 'option';
         label.innerHTML = `
-          <input type="checkbox" name="distress" value="${distress}">
-          <span>${distress}</span>
+          <input type="checkbox" name="option" value="${option}">
+          <span>${option}</span>
         `;
         grid.appendChild(label);
       });
 
-      // Create other input field
-      const otherInputContainer = document.createElement('div');
-      otherInputContainer.className = 'other-input';
-      otherInputContainer.innerHTML = `
-        <input type="text" id="other-distress" placeholder="Specify other distress">
-      `;
-      form.appendChild(otherInputContainer);
+      // Create other input field (if "Other" option exists)
+      const hasOtherOption = options.includes("Other");
+      let otherInputContainer;
+      if (hasOtherOption) {
+        otherInputContainer = document.createElement('div');
+        otherInputContainer.className = 'other-input';
+        otherInputContainer.innerHTML = `
+          <input type="text" id="other-option" placeholder="Specify other option">
+        `;
+        form.appendChild(otherInputContainer);
 
-      // Add event listener for 'Other' checkbox
-      const otherCheckbox = form.querySelector('input[value="Other"]');
-      otherCheckbox.addEventListener('change', () => {
-        if (otherCheckbox.checked) {
-          otherInputContainer.style.display = 'block';
-        } else {
-          otherInputContainer.style.display = 'none';
-        }
-      });
+        // Add event listener for 'Other' checkbox
+        const otherCheckbox = form.querySelector('input[value="Other"]');
+        otherCheckbox.addEventListener('change', () => {
+          if (otherCheckbox.checked) {
+            otherInputContainer.style.display = 'block';
+          } else {
+            otherInputContainer.style.display = 'none';
+          }
+        });
+      }
 
       // Create submit button
       const submitButton = document.createElement('button');
@@ -117,31 +116,29 @@ export const MultipleChoice = {
       const submitHandler = (event) => {
         event.preventDefault();
 
-        const workDescription = Array.from(form.querySelectorAll('input[name="distress"]:checked'))
+        const selectedOptions = Array.from(form.querySelectorAll('input[name="option"]:checked'))
           .map(cb => cb.value);
         
-        if (workDescription.includes("Other")) {
-          const otherValue = form.querySelector('#other-distress').value.trim();
+        if (hasOtherOption && selectedOptions.includes("Other")) {
+          const otherValue = form.querySelector('#other-option').value.trim();
           if (otherValue) {
-            workDescription.push(otherValue);
+            selectedOptions.push(otherValue);
           }
         }
 
-        if (workDescription.length === 0) {
-          alert('Please select at least one distress.');
+        if (selectedOptions.length === 0) {
+          alert('Please select at least one option.');
           return;
         }
-        
-        
-        
+
         // Disable all checkboxes
         form.querySelectorAll('input[type="checkbox"]').forEach(input => {
           input.disabled = true;
         });
 
-        // Disable "Other" input field
-        const otherInput = form.querySelector('#other-distress');
-        if (otherInput) {
+        // Disable "Other" input field (if exists)
+        if (hasOtherOption) {
+          const otherInput = form.querySelector('#other-option');
           otherInput.disabled = true;
         }
 
@@ -150,18 +147,17 @@ export const MultipleChoice = {
         submitButton.textContent = 'Submitted';
         submitButton.style.backgroundColor = '#808080';
         submitButton.style.cursor = 'not-allowed';
-        
-        
-        
+
+        // Trigger the submit event
         window.voiceflow.chat.interact({
-          type: 'complete_workScope',
+          type: submitEvent,
           payload: {
-            workDescription: workDescription,
-            confirmation: 'Work description submitted successfully'
+            selectedOptions: selectedOptions,
+            confirmation: 'Options submitted successfully'
           }
         });
       };
-      
+
       form.addEventListener('submit', submitHandler);
 
       // Cleanup function
@@ -171,7 +167,7 @@ export const MultipleChoice = {
       };
 
     } catch (error) {
-      console.error("Extension Error:", error.message);
+      console.error("MultipleChoice Component Error:", error.message);
     }
   }
 };
