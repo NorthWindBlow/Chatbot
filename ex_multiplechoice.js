@@ -119,7 +119,7 @@ export const MultipleChoice = {
 
       // 其他选项处理
       const hasOtherOption = options.includes("Other");
-      // let otherInputContainer;
+      let otherInputContainer;
       if (hasOtherOption) {
         otherInputContainer = document.createElement('div');
         otherInputContainer.className = 'other-input';
