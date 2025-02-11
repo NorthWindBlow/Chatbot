@@ -32,7 +32,7 @@ export const MultipleChoice = {
 
         .option {
           position: relative; /* 设置相对定位，以便内部元素（如 input）可以绝对定位。 */
-          padding: 1rem; /* 设置选项的内边距为 1rem。 */
+          padding: 0.8rem; /* 设置选项的内边距为 0.8rem。 */
           border: 1px solid #d2d2d7; /* 设置边框为 1px 的浅灰色。 */
           border-radius: 8px; /* 设置圆角为 8px。 */
           cursor: pointer; /* 将鼠标指针设置为手形，表示可点击。 */
@@ -57,7 +57,7 @@ export const MultipleChoice = {
 
         .option-text {
           display: block; /* 将文本设置为块级元素，使其独占一行。 */
-          line-height: 1.4; /* 设置行高为 1.4，使文本更易读。 */
+          line-height: 1.2; /* 设置行高为 1.2，使文本更易读。 */
         }
 
         .mc-form button[type="submit"] {
@@ -80,11 +80,11 @@ export const MultipleChoice = {
         }
 
         .other-input input {
-          width: 100%; /* 设置输入框宽度为 100%。 */
+          width: 80%; /* 设置输入框宽度为 80%。 */
           padding: 0.8rem; /* 设置内边距。 */
           border: 1px solid #d2d2d7; /* 设置边框。 */
           border-radius: 8px; /* 设置圆角。 */
-          margin-top: 1rem; /* 设置上边距为 1rem。 */
+          margin-top: 12px; /* 设置上边距为 12px。 */
         }
       `;
 
