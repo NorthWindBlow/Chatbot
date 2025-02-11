@@ -45,34 +45,33 @@ export const MultipleChoice = {
         }
 
         .option.selected {
-          background: #007AFF !important;
-          border-color: #007AFF;
-          color: white;
+          background: #007AFF !important; /* 定义选中选项的样式。将背景色改为蓝色。 */
+          border-color: #007AFF; /* 将边框颜色改为蓝色。 */
+          color: white; /* 将文字颜色改为白色。 */
         }
 
         .option input {
-          opacity: 0;
-          position: absolute;
+          opacity: 0; /* 将输入框的透明度设置为 0，使其不可见。 */
+          position: absolute; /* 将输入框绝对定位，脱离文档流。 */
         }
 
         .option-text {
-          display: block;
-          line-height: 1.4;
+          display: block; /* 将文本设置为块级元素，使其独占一行。 */
+          line-height: 1.4; /* 设置行高为 1.4，使文本更易读。 */
         }
 
         .mc-form button[type="submit"] {
-          background: linear-gradient(135deg, #007AFF, #0063CC);
-          color: white;
-          border: none;
-          padding: 0.5rem 1.5rem; /* 减小上下 padding */
-          border-radius: 8px;
-          font-size: 1rem; /* 减小字体大小 */
-          cursor: pointer;
-          transition: all 0.2s ease;
-          float: centre;
-          display: block; /* 让按钮居中 */
-          margin: 0 auto; /* 让按钮居中 */
-          width: fit-content; /* 让按钮宽度自适应内容 */
+          background: linear-gradient(135deg, #007AFF, #0063CC); /* 设置渐变色背景。 */
+          color: white; /* 设置文字颜色为白色。 */
+          border: none; /* 移除边框。 */
+          padding: 0.5rem 1.5rem; /* 设置内边距。 */
+          border-radius: 8px; /* 设置圆角。 */
+          font-size: 1rem; /* 设置字体大小。 */
+          cursor: pointer; /* 将鼠标指针设置为手形。 */
+          transition: all 0.2s ease; /* 添加过渡效果。 */
+          display: block; /* 将按钮设置为块级元素。 */
+          margin: 0 auto; /* 使按钮水平居中。 */
+          width: fit-content; /* 让按钮宽度自适应内容。 */
         }
 
         .mc-form button[type="submit"]:hover {
