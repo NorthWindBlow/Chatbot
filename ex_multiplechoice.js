@@ -75,16 +75,16 @@ export const MultipleChoice = {
         }
 
         .mc-form button[type="submit"]:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          transform: translateY(-1px); /* 将按钮向上移动 1px，产生悬浮效果。 */
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 添加阴影效果。 */
         }
 
         .other-input input {
-          width: 100%;
-          padding: 0.8rem; /* 调整输入框内边距 */
-          border: 1px solid #d2d2d7;
-          border-radius: 8px;
-          margin-top: 1rem;
+          width: 100%; /* 设置输入框宽度为 100%。 */
+          padding: 0.8rem; /* 设置内边距。 */
+          border: 1px solid #d2d2d7; /* 设置边框。 */
+          border-radius: 8px; /* 设置圆角。 */
+          margin-top: 1rem; /* 设置上边距为 1rem。 */
         }
       `;
 
@@ -123,11 +123,12 @@ export const MultipleChoice = {
         otherInputContainer = document.createElement('div');
         otherInputContainer.className = 'other-input';
         otherInputContainer.innerHTML = `
-          <input type="text" id="other-option" placeholder="Please type your answear">
+          <input type="text" id="other-option" placeholder="Please type your answer">
         `;
         form.appendChild(otherInputContainer);
 
         const otherCheckbox = form.querySelector('input[value="Other"]');
+        otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none'; // 初始化时设置显示状态
         otherCheckbox.addEventListener('change', () => {
           otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
         });
