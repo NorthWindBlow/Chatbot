@@ -19,15 +19,15 @@ export const MultipleChoice = {
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
-          max-width: 680px;
-          margin: 1rem auto;
+          max-width: 680px; /* 限制容器的最大宽度为 680px，确保内容不会过宽。*/
+          margin: 1rem auto; /* 设置容器上下边距为 1rem，左右边距为 auto，使容器水平居中。 */
         }
 
         .options-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 12px;
-          margin-bottom: 2rem;
+          display: grid; /* 使用 CSS Grid 布局来排列选项。 */
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 自动调整列数，以适应容器宽度。每列的最小宽度为 200px，最大宽度为剩余空间的等分（1fr）。 */
+          gap: 10px; /* 设置选项之间的间距为 12px。 */
+          margin-bottom: 1rem; /* 在网格底部添加 1rem 的外边距。 */
         }
 
         .option {
