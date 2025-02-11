@@ -82,7 +82,7 @@ export const MultipleChoice = {
 
         .other-input input {
           width: 100%;
-          padding: 1rem;
+          padding: 0.8rem; /* 调整输入框内边距 */
           border: 1px solid #d2d2d7;
           border-radius: 8px;
           margin-top: 1rem;
@@ -119,12 +119,12 @@ export const MultipleChoice = {
 
       // 其他选项处理
       const hasOtherOption = options.includes("Other");
-      let otherInputContainer;
+      // let otherInputContainer;
       if (hasOtherOption) {
         otherInputContainer = document.createElement('div');
         otherInputContainer.className = 'other-input';
         otherInputContainer.innerHTML = `
-          <input type="text" id="other-option" placeholder="Specify other option">
+          <input type="text" id="other-option" placeholder="Please type your answear">
         `;
         form.appendChild(otherInputContainer);
 
