@@ -28,31 +28,30 @@ export const MultipleChoice = {
           padding: 1.5rem;
           background: #ffffff;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.08);
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
-          font-size: 14px; /* 系统默认字号 */
         }
 
         .options-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-          gap: 8px;
-          margin-bottom: 1.5rem;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 12px;
+          margin-bottom: 2rem;
         }
 
         .option {
           position: relative;
-          padding: 12px;
+          padding: 1.4rem;
           background: #f5f5f7;
-          border-radius: 8px;
+          border-radius: 12px;
           cursor: pointer;
           transition: all 0.2s ease;
-          border: 1px solid #e0e0e0;
+          border: 1px solid transparent;
         }
 
         .option:hover {
-          background: #ebebfb;
-          transform: none; /* 移除上浮效果 */
+          transform: translateY(-2px);
+          background: #eaeafb;
         }
 
         .option input {
@@ -67,15 +66,19 @@ export const MultipleChoice = {
 
         .option input:checked ~ .option-text {
           color: #007AFF;
-          font-weight: 500;
         }
 
         .checkmark {
-          width: 20px;
-          height: 20px;
-          border-radius: 5px;
-          right: 10px;
-          top: 10px;
+          position: absolute;
+          right: 1rem;
+          top: 1rem;
+          width: 24px;
+          height: 24px;
+          background: #007AFF;
+          border-radius: 6px;
+          opacity: 0;
+          transform: scale(0.8);
+          transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .checkmark::after {
@@ -91,11 +94,11 @@ export const MultipleChoice = {
         }
 
         .option-text {
+          font-size: 1.1rem;
           color: #1d1d1f;
           transition: color 0.2s ease;
           padding-right: 2rem;
           line-height: 1.4;
-          font-size: 0.95em; /* 接近系统默认 */
         }
 
         .mc-form button[type="submit"] {
@@ -112,10 +115,9 @@ export const MultipleChoice = {
           box-shadow: 0 4px 12px rgba(0,122,255,0.25);
         }
 
-        .mc-form button[type="submit"] {
-          padding: 8px 20px;
-          font-size: 0.95em;
-          border-radius: 8px;
+        .mc-form button[type="submit"]:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 16px rgba(0,122,255,0.3);
         }
 
         .mc-form button[type="submit"]:active {
@@ -149,8 +151,8 @@ export const MultipleChoice = {
           pointer-events: none;
         }
       `;
+      
       container.appendChild(style); // Append style to container
-
       element.appendChild(container);
 
       const form = container.querySelector('#multiple-choice-form');
