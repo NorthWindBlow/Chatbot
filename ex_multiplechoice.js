@@ -31,17 +31,17 @@ export const MultipleChoice = {
         }
 
         .option {
-          position: relative;
-          padding: 1.4rem;
-          border: 1px solid #d2d2d7;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          background: transparent;
+          position: relative; /* 设置相对定位，以便内部元素（如 input）可以绝对定位。 */
+          padding: 1rem; /* 设置选项的内边距为 1rem。 */
+          border: 1px solid #d2d2d7; /* 设置边框为 1px 的浅灰色。 */
+          border-radius: 8px; /* 设置圆角为 8px。 */
+          cursor: pointer; /* 将鼠标指针设置为手形，表示可点击。 */
+          transition: all 0.2s ease; /* 添加过渡效果，使样式变化更平滑。 */
+          background: transparent; /* 设置背景为透明。 */
         }
 
         .option:hover {
-          background: #f0f0f0 !important;
+          background: #f0f0f0 !important; /* 定义鼠标悬停时选项的样式。 */
         }
 
         .option.selected {
