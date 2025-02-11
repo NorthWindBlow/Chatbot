@@ -31,22 +31,14 @@
     <div id="voiceflow-chat-frame"></div>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script type="module">
-      import { VideoExtension,
-                TimerExtension,
-                FormExtension,
-                MapExtension,
-                FileUploadExtension,
-                KBUploadExtension,
-                DateExtension,
-                ConfettiExtension,
-                FeedbackExtension } from './extensions.js';
+      import { MultipleChoice } from './ex_multiplechoice.js';
 
       (function (d, t) {
         var v = d.createElement(t),
           s = d.getElementsByTagName(t)[0];
         v.onload = function () {
           window.voiceflow.chat.load({
-            verify: { projectID: '65e8846e905ec742d67e774f' },
+            verify: { projectID: '67aa9de7f1b2f4adafba5a03' },
             url: 'https://general-runtime.voiceflow.com',
             versionID: 'development',
             user: {
@@ -59,15 +51,7 @@
             allowDangerousHTML: true,
             assistant: {
               extensions: [
-                VideoExtension,
-                TimerExtension,
-                FormExtension,
-                MapExtension,
-                FileUploadExtension,
-                KBUploadExtension,
-                DateExtension,
-                ConfettiExtension,
-                FeedbackExtension,
+                MultipleChoice,
               ],
             },
           });
