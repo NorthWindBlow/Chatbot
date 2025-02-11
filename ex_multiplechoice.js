@@ -80,11 +80,11 @@ export const MultipleChoice = {
         }
 
         .other-input input {
-          width: 80%; /* 设置输入框宽度为 80%。 */
+          width: 90%; /* 设置输入框宽度为 80%。 */
           padding: 0.5rem; /* 设置内边距。 */
           border: 1px solid #d2d2d7; /* 设置边框。 */
           border-radius: 8px; /* 设置圆角。 */
-          margin-top: 12px; /* 设置上边距为 12px。 */
+          margin-top: 0.2rem; /* 设置上边距为 0.2rem。 */
         }
       `;
 
