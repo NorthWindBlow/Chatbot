@@ -79,6 +79,11 @@ export const MultipleChoice = {
           box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 添加阴影效果。 */
         }
 
+        .other-input {
+          margin-top: 0.5rem; /* "Other" 输入框与选项之间的距离 */
+          margin-bottom: 1rem; /* "Other" 输入框与提交按钮之间的距离 */
+        }
+
         .other-input input {
           width: 90%; /* 设置输入框宽度为 80%。 */
           padding: 0.5rem; /* 设置内边距。 */
