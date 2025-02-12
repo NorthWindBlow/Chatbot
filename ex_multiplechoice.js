@@ -25,19 +25,20 @@ export const MultipleChoice = {
 
         .options-grid {
           display: grid; /* 使用 CSS Grid 布局来排列选项。 */
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 自动调整列数，以适应容器宽度。每列的最小宽度为 200px，最大宽度为剩余空间的等分（1fr）。 */
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 自动调整列数，以适应容器宽度。每列的最小宽度为 120px，最大宽度为剩余空间的等分（1fr）。 */
           gap: 10px; /* 设置选项之间的间距为 10px。 */
           margin-bottom: 1rem; /* 在网格底部添加 1rem 的外边距。 */
         }
 
         .option {
           position: relative; /* 设置相对定位，以便内部元素（如 input）可以绝对定位。 */
-          padding: 0.5rem; /* 设置选项的内边距为 0.5rem。 */
+          padding: 0.8rem; /* 设置选项的内边距为 0.8rem。 */
           border: 1px solid #d2d2d7; /* 设置边框为 1px 的浅灰色。 */
           border-radius: 8px; /* 设置圆角为 8px。 */
           cursor: pointer; /* 将鼠标指针设置为手形，表示可点击。 */
           transition: all 0.2s ease; /* 添加过渡效果，使样式变化更平滑。 */
           background: transparent; /* 设置背景为透明。 */
+          min-width: 120px;
         }
 
         .option:hover {
@@ -58,6 +59,8 @@ export const MultipleChoice = {
         .option-text {
           display: block; /* 将文本设置为块级元素，使其独占一行。 */
           line-height: 1.2; /* 设置行高为 1.2，使文本更易读。 */
+          word-break: break-word;
+          white-space: normal;
         }
 
         .mc-form button[type="submit"] {
