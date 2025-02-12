@@ -1,4 +1,4 @@
-export const MultipleChoice = {
+/export const MultipleChoice = {
   name: 'MultipleChoice',
   type: 'response',
   match: ({ trace }) =>
@@ -7,6 +7,7 @@ export const MultipleChoice = {
   render: ({ trace, element }) => {
     try {
       const { options, submitEvent } = trace.payload;
+
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
       }
@@ -103,11 +104,6 @@ export const MultipleChoice = {
       grid.className = 'options-grid';
       form.appendChild(grid);
 
-      // 设置存储变量
-      let selectedOptions = [];
-      const hasOtherOption = options.includes("Other");
-      let otherInputContainer, otherInput;
-
       // 创建选项
       options.forEach(option => {
         const label = document.createElement('label');
@@ -119,38 +115,27 @@ export const MultipleChoice = {
 
         const input = label.querySelector('input');
         input.addEventListener('change', () => {
-          if (input.checked) {
-            if (option === "Other") {
-              otherInputContainer.style.display = 'block';
-            } else {
-              selectedOptions.push(option);
-            }
-          } else {
-            selectedOptions = selectedOptions.filter(val => val !== option);
-          }
-          updateSelectedOptions();
+          label.classList.toggle('selected', input.checked);
         });
 
         grid.appendChild(label);
       });
 
       // 其他选项处理
+      const hasOtherOption = options.includes("Other");
+      let otherInputContainer;
       if (hasOtherOption) {
         otherInputContainer = document.createElement('div');
         otherInputContainer.className = 'other-input';
-        otherInputContainer.style.display = 'none';
         otherInputContainer.innerHTML = `
           <input type="text" id="other-option" placeholder="Please type your answer">
         `;
-        otherInput = otherInputContainer.querySelector('input');
         form.appendChild(otherInputContainer);
 
-        otherInput.addEventListener('input', () => {
-          selectedOptions = selectedOptions.filter(val => val !== "Other");
-          if (otherInput.value.trim()) {
-            selectedOptions.push(otherInput.value.trim());
-          }
-          updateSelectedOptions();
+        const otherCheckbox = form.querySelector('input[value="Other"]');
+        otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none'; // 初始化时设置显示状态
+        otherCheckbox.addEventListener('change', () => {
+          otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
         });
       }
 
@@ -160,16 +145,24 @@ export const MultipleChoice = {
       submitButton.textContent = 'Submit';
       form.appendChild(submitButton);
 
-      const updateSelectedOptions = () => {
-        console.log('Updated Selected Options:', selectedOptions);
-      };
-
-      form.addEventListener('submit', (event) => {
+      const submitHandler = (event) => {
         event.preventDefault();
+
+        // 获取原始选中项（包含 "Other"）
+        let selectedOptions = Array.from(form.querySelectorAll('input[name="option"]:checked'))
+          .map(cb => cb.value);
+        
+        if (hasOtherOption && selectedOptions.includes("Other")) {
+          const otherValue = form.querySelector('#other-option').value.trim();
+          if (otherValue) selectedOptions.push(otherValue);
+        }
+
         if (selectedOptions.length === 0) {
           alert('Please select at least one option.');
           return;
         }
+
+        // 禁用组件
         form.querySelectorAll('input, button').forEach(el => el.disabled = true);
         submitButton.textContent = 'Submitted';
         submitButton.style.backgroundColor = '#808080';
@@ -181,7 +174,9 @@ export const MultipleChoice = {
             confirmation: 'Options submitted successfully'
           }
         });
-      });
+      };
+
+      form.addEventListener('submit', submitHandler);
 
       return () => {
         form.removeEventListener('submit', submitHandler);
