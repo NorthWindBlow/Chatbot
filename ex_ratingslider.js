@@ -59,7 +59,7 @@ export const RatingSlider = {
           justify-content: space-between;
           position: absolute;
           width: 100%;
-          top: 30px;
+          top: -20px;
           pointer-events: none;
         }
 
@@ -69,6 +69,14 @@ export const RatingSlider = {
           font-size: 0.85em;
           color: #666;
           white-space: nowrap;
+        }
+
+        .scale-label:first-child {
+          transform: translateX(-10%); /* 首标签左对齐 */
+        }
+
+        .scale-label:last-child {
+          transform: translateX(10%); /* 尾标签右对齐 */
         }
 
         input[type="range"] {
@@ -159,13 +167,23 @@ export const RatingSlider = {
         // 刻度标签
         const scaleLabels = document.createElement('div');
         scaleLabels.className = 'scale-labels';
-        labels.forEach((text, i) => {
-          const span = document.createElement('span');
-          span.className = 'scale-label';
-          span.textContent = text;
-          span.style.left = `${labelPositions[i]}%`;
-          scaleLabels.appendChild(span);
-        });
+        //labels.forEach((text, i) => {
+        //  const span = document.createElement('span');
+        //  span.className = 'scale-label';
+        //  span.textContent = text;
+        //  span.style.left = `${labelPositions[i]}%`;
+        //  scaleLabels.appendChild(span);
+        //});
+        const firstLabel = document.createElement('span');
+        firstLabel.className = 'scale-label';
+        firstLabel.textContent = labels[0];
+        const lastLabel = document.createElement('span');
+        lastLabel.className = 'scale-label';
+        lastLabel.textContent = labels[labels.length - 1];
+
+        scaleLabels.appendChild(firstLabel);
+        scaleLabels.appendChild(lastLabel);
+        
 
         // 数值显示
         const valueDisplay = document.createElement('div');
