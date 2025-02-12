@@ -100,63 +100,6 @@ export const RatingSlider = {
           font-size: 1.1em;
         }
 
-        .zoom-overlay {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 85vw;
-          max-width: 400px;
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-          z-index: 1000;
-        }
-
-        .zoom-backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0,0,0,0.5);
-          z-index: 999;
-        }
-
-        .zoom-slider-track {
-          height: 6px;
-          background: #eee;
-          margin: 30px 0;
-          position: relative;
-          border-radius: 3px;
-        }
-
-        .zoom-thumb {
-          width: 32px;
-          height: 32px;
-          background: #007AFF;
-          border-radius: 50%;
-          position: absolute;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          cursor: grab;
-          transition: transform 0.2s;
-        }
-
-        .zoom-thumb:active {
-          transform: translate(-50%, -50%) scale(1.1);
-          cursor: grabbing;
-        }
-
-        .zoom-scale-mark {
-          position: absolute;
-          top: -20px;
-          transform: translateX(-50%);
-          font-size: 0.9em;
-          color: #888;
-        }
-
         .submit-btn {
           display: block;
           margin: 2rem auto;
@@ -192,85 +135,6 @@ export const RatingSlider = {
       // 工具函数：获取标签索引
       const getLabelIndex = (value) => {
         return labelPositions.findIndex(pos => pos === value);
-      };
-
-      // 创建放大控件
-      const createZoomSlider = (option, initialValue) => {
-        const overlay = document.createElement('div');
-        overlay.className = 'zoom-overlay';
-        
-        const track = document.createElement('div');
-        track.className = 'zoom-slider-track';
-        
-        // 创建刻度标记
-        labels.forEach((label, i) => {
-          const mark = document.createElement('div');
-          mark.className = 'zoom-scale-mark';
-          mark.style.left = `${labelPositions[i]}%`;
-          mark.textContent = label;
-          track.appendChild(mark);
-        });
-
-        // 创建滑块
-        const thumb = document.createElement('div');
-        thumb.className = 'zoom-thumb';
-        const initialPos = findNearestPosition(initialValue);
-        thumb.style.left = `${initialPos}%`;
-
-        // 数值显示
-        const valueDisplay = document.createElement('div');
-        valueDisplay.className = 'value-display';
-        valueDisplay.textContent = labels[getLabelIndex(initialPos)] || initialPos;
-        valueDisplay.style.textAlign = 'center';
-        valueDisplay.style.margin = '1rem 0';
-        valueDisplay.style.fontSize = '1.2em';
-
-        // 交互逻辑
-        let isDragging = false;
-        
-        const updatePosition = (clientX) => {
-          const rect = track.getBoundingClientRect();
-          let percent = (clientX - rect.left) / rect.width * 100;
-          percent = Math.max(0, Math.min(100, percent));
-          const snapPercent = findNearestPosition(percent);
-          
-          thumb.style.left = `${snapPercent}%`;
-          valueDisplay.textContent = labels[getLabelIndex(snapPercent)] || snapPercent;
-          return snapPercent;
-        };
-
-        // 事件监听
-        thumb.addEventListener('mousedown', () => isDragging = true);
-        track.addEventListener('click', (e) => {
-          const percent = updatePosition(e.clientX);
-          document.dispatchEvent(new CustomEvent('zoomSliderUpdate', { detail: percent }));
-        });
-
-        document.addEventListener('mousemove', (e) => {
-          if (isDragging) updatePosition(e.clientX);
-        });
-        document.addEventListener('mouseup', () => isDragging = false);
-
-        // 组装组件
-        overlay.innerHTML = `
-          <h3 style="margin: 0 0 1rem; color: #333">调整 ${option}</h3>
-          ${valueDisplay.outerHTML}
-        `;
-        track.appendChild(thumb);
-        overlay.appendChild(track);
-
-        // 关闭按钮
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'submit-btn';
-        closeBtn.textContent = '完成';
-        closeBtn.style.marginTop = '1.5rem';
-        closeBtn.onclick = () => {
-          document.body.removeChild(overlay);
-          document.body.removeChild(backdrop);
-        };
-
-        overlay.appendChild(closeBtn);
-        return overlay;
       };
 
       // 创建主滑块行
@@ -318,33 +182,6 @@ export const RatingSlider = {
         // 事件监听
         slider.addEventListener('input', (e) => updateDisplay(e.target.value));
 
-        // 长按处理
-        let pressTimer;
-        const startPress = () => {
-          pressTimer = setTimeout(() => {
-            const backdrop = document.createElement('div');
-            backdrop.className = 'zoom-backdrop';
-            
-            const zoomSlider = createZoomSlider(option, slider.value);
-            document.body.appendChild(backdrop);
-            document.body.appendChild(zoomSlider);
-
-            // 同步更新主滑块
-            document.addEventListener('zoomSliderUpdate', (e) => {
-              updateDisplay(e.detail);
-            });
-          }, 600);
-        };
-
-        const cancelPress = () => clearTimeout(pressTimer);
-        
-        slider.addEventListener('touchstart', startPress);
-        slider.addEventListener('touchend', cancelPress);
-        slider.addEventListener('touchcancel', cancelPress);
-        slider.addEventListener('mousedown', startPress);
-        slider.addEventListener('mouseup', cancelPress);
-        slider.addEventListener('mouseleave', cancelPress);
-
         // 初始化显示
         updateDisplay(slider.value);
 
@@ -377,7 +214,7 @@ export const RatingSlider = {
           type: submitEvent,
           payload: {
             ratings: results,
-            confirmation: 'Options submitted successfully'
+            confirmation: '评分提交成功'
           }
         });
 
