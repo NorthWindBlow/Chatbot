@@ -92,7 +92,8 @@
               title: 'ARTM Agent',
               stylesheet: `
                 /* 隐藏水印 */
-                .vfrc-footer--watermark {
+                /* 使用属性选择器增强特异性 */
+                div[class*="Watermark"] {
                   display: none !important;
                   visibility: hidden !important;
                   height: 0 !important;
