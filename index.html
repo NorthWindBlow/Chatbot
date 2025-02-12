@@ -24,14 +24,23 @@
         transition: width 0.3s ease; /* 添加平滑过渡 */
         
         /* 移动端样式覆盖 */
-        @media (max-width: 768px) and (orientation: portrait) {
+        @media (max-width: 1300px) and (orientation: portrait) {
           width: 100vw !important;
           height: 100dvh !important;
-          border-radius: 0;
+          max-width: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
           position: fixed;
           top: 0;
           left: 0;
-          max-width: none;
+        }
+      }
+
+      /* 横竖屏适配 */
+      @media (max-width: 1300px) and (orientation: landscape) {
+        html, body {
+          height: 100%;
+          overflow: hidden;
         }
       }
 
