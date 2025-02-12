@@ -65,6 +65,13 @@
         height: calc(100% - 60px) !important;
       }
 
+       /* 隐藏水印 */
+      .vfrc-footer--watermark {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+      }
+
     </style>
   </head>
   <body> 
@@ -90,10 +97,6 @@
                 MultipleChoice,
               ],
               title: 'ARTM Agent',
-              branding: {
-                footer: false,
-                customHTML: '<div class="custom-watermark">My Brand</div>'
-              }
           },
           });
         };
