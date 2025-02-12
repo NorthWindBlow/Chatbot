@@ -65,24 +65,30 @@
         height: calc(100% - 60px) !important;
       }
 
-       /* 自定义水印样式 */
-      .custom-watermark {
-        position: fixed;
-        bottom: 12px;
-        right: 12px;
-        font-size: 12px;
-        color: #666;
-        z-index: 1000;
-        pointer-events: auto;
+       /* 隐藏原始水印文字 */
+      .vfrc-footer--watermark {
+        font-size: 0 !important;
+        position: relative;
       }
-      .custom-watermark a {
-        color: inherit;
+      
+      /* 添加新文字并链接到原有容器 */
+      .vfrc-footer--watermark::after {
+        content: "Powered by HMTS Lab";
+        font-size: 12px; /* 按需调整 */
+        color: #666; /* 按需调整颜色 */
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        cursor: pointer;
+      }
+      
+      /* 如果原有水印是链接，直接通过HTML修改链接地址 */
+      /* 需要原有HTML类似：<a href="原链接" class="vfrc-footer--watermark"> */
+      .vfrc-footer--watermark a {
         text-decoration: none;
-        transition: opacity 0.2s;
+        color: inherit;
       }
-      .custom-watermark a:hover {
-        opacity: 0.8;
-      }
+       
 
     </style>
   </head>
