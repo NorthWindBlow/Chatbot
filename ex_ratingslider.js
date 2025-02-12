@@ -214,7 +214,7 @@ export const RatingSlider = {
           type: submitEvent,
           payload: {
             ratings: results,
-            confirmation: '评分提交成功'
+            confirmation: 'Options submitted successfully'
           }
         });
 
