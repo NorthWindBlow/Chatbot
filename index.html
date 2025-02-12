@@ -63,8 +63,12 @@
             verify: { projectID: '67aa9de7f1b2f4adafba5a03' },
             url: 'https://general-runtime.voiceflow.com',
             versionID: 'production',
-            // autostart: true,
-            // allowDangerousHTML: true,
+            render: {
+              mode: 'embedded',
+              target: '#voiceflow-chat-frame',
+            },
+            autostart: true,
+            allowDangerousHTML: true,
             assistant: {
               extensions: [
                 MultipleChoice,
