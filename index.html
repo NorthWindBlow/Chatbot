@@ -49,7 +49,7 @@
       }
     </style>
   </head>
-  <body>
+  <body>    
     <canvas id="confetti-canvas"></canvas>
     <div id="voiceflow-chat-frame"></div>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -57,18 +57,14 @@
       import { MultipleChoice } from './ex_multiplechoice.js';
 
       (function (d, t) {
-        var v = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
+        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
         v.onload = function () {
           window.voiceflow.chat.load({
             verify: { projectID: '67aa9de7f1b2f4adafba5a03' },
             url: 'https://general-runtime.voiceflow.com',
-            versionID: 'development',
-            user: {
-              name: 'Demo User',
-            },
-            autostart: true,
-            allowDangerousHTML: true,
+            versionID: 'production',
+            // autostart: true,
+            // allowDangerousHTML: true,
             assistant: {
               extensions: [
                 MultipleChoice,
@@ -76,9 +72,7 @@
             },
           });
         };
-        v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
-        v.type = 'text/javascript';
-        s.parentNode.insertBefore(v, s);
+        v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs'; v.type = 'text/javascript'; s.parentNode.insertBefore(v, s);
       })(document, 'script');
     </script>
   </body>
