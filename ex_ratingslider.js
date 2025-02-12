@@ -360,7 +360,7 @@ export const RatingSlider = {
       // 提交按钮
       const submitButton = document.createElement('button');
       submitButton.className = 'submit-btn';
-      submitButton.textContent = '提交评分';
+      submitButton.textContent = 'Submit';
       
       submitButton.onclick = (e) => {
         e.preventDefault();
@@ -377,12 +377,12 @@ export const RatingSlider = {
           type: submitEvent,
           payload: {
             ratings: results,
-            confirmation: '评分提交成功'
+            confirmation: 'Options submitted successfully'
           }
         });
 
         submitButton.disabled = true;
-        submitButton.textContent = '已提交';
+        submitButton.textContent = 'Submitted';
       };
 
       container.appendChild(submitButton);
