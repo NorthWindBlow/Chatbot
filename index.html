@@ -65,17 +65,38 @@
         height: calc(100% - 60px) !important;
       }
 
-       /* 隐藏水印 */
-      .vfrc-footer--watermark {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
+       /* 自定义水印样式 */
+      .custom-watermark {
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        font-size: 12px;
+        color: #666;
+        z-index: 1000;
+        pointer-events: auto;
+      }
+      .custom-watermark a {
+        color: inherit;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .custom-watermark a:hover {
+        opacity: 0.8;
       }
 
     </style>
   </head>
   <body> 
+    <!-- 聊天窗口容器 -->
     <div id="voiceflow-chat-frame"></div>
+    
+    <!-- 自定义水印 -->
+    <div class="custom-watermark">
+      <a href="https://www.jbyu.net" target="_blank" rel="noopener noreferrer">
+        Powered by HMTS Lab
+      </a>
+    </div>
+    
     <script type="module">
       import { MultipleChoice } from './ex_multiplechoice.js';
 
@@ -101,7 +122,6 @@
               image: 'https://cm4-production-assets.s3.amazonaws.com/1734132070582-chat-bot-logo-design-virtual-assistant-icon-vector-42176399.jpg',
               avatar: 'https://cm4-production-assets.s3.amazonaws.com/1734132070582-chat-bot-logo-design-virtual-assistant-icon-vector-42176399.jpg',
               description: 'Hi!',
-              stylesheet = 'data:text/css,.vfrc-footer--watermark%7Bdisplay%3Anone!important%3B%7D',
           },
           });
         };
