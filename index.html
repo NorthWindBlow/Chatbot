@@ -72,6 +72,7 @@
     
     <script type="module">
       import { MultipleChoice } from './ex_multiplechoice.js';
+      import { RatingSlider } from './ex_ratingslider.js';
 
       (function (d, t) {
         var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
@@ -88,7 +89,7 @@
             allowDangerousHTML: true,
             assistant: {
               extensions: [
-                MultipleChoice,
+                MultipleChoice, RatingSlider,
               ],
               title: 'ARTM Agent',
               persistence: 'memory', //'sessionStorage',
