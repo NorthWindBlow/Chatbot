@@ -12,41 +12,40 @@
         min-height: 100vh;
       }
       #voiceflow-chat-frame {
-        width: 90%;
-        height: 90%;
-        max-width: 100vw;
-        max-height: 100vh;
+        /* 桌面端默认样式 */
+        width: 80vmin;
+        height: 80vmin;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        transition: all 0.3s ease;
+        background: white;
+        
+        /* 移动端样式覆盖 */
+        @media (max-width: 768px) {
+          width: 100% !important;
+          height: 100vh !important;
+          border-radius: 0;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
       }
       #confetti-canvas {
         position: fixed;
         z-index: 999;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
         pointer-events: none;
       }
-      /* 覆盖默认的悬浮按钮样式 */
-      .vfrc-launcher {
-        display: none !important;
-      }
+      
       /* 调整聊天窗口样式 */
       .vfrc-chat {
-        position: relative !important;
         width: 100% !important;
         height: 100% !important;
         max-height: none !important;
-        border-radius: 12px !important;
+        border-radius: inherit !important;
       }
-      @media (max-width: 768px) {
-        #voiceflow-chat-frame {
-          width: 100vw;
-          height: 100vh;
-        }
+       /* 消息容器适配 */
+      .vfrc-chat-dialog {
+        height: calc(100% - 60px) !important;
       }
     </style>
   </head>
@@ -63,8 +62,7 @@
             versionID: 'production',
             render: {
               mode: 'embedded',
-              // target: '#voiceflow-chat-frame',
-              target: document.body
+              target: '#voiceflow-chat-frame',
             },
             autostart: true,
             allowDangerousHTML: true,
@@ -73,6 +71,22 @@
                 MultipleChoice,
               ],
             },
+            chatContainer: {
+              stylesheet: `
+                .vfrc-chat { 
+                  border-radius: inherit;
+                  box-shadow: none;
+                }
+                .vfrc-message { 
+                  max-width: 70%;
+                }
+                @media (max-width: 768px) {
+                  .vfrc-chat {
+                    border-radius: 0 !important;
+                  }
+                }
+              `
+            }
           });
         };
         v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs'; v.type = 'text/javascript'; s.parentNode.insertBefore(v, s);
