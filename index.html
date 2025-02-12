@@ -65,12 +65,28 @@
               target: '#voiceflow-chat-frame',
             },
             autostart: true,
+            allowDangerousHTML: true,
             assistant: {
               extensions: [
                 MultipleChoice,
               ],
-              persistence: 'memory'
             },
+                        chatContainer: {
+              stylesheet: `
+                .vfrc-chat { 
+                  border-radius: inherit;
+                  box-shadow: none;
+                }
+                .vfrc-message { 
+                  max-width: 70%;
+                }
+                @media (max-width: 768px) {
+                  .vfrc-chat {
+                    border-radius: 0 !important;
+                  }
+                }
+              `
+            }
           });
         };
         v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs'; v.type = 'text/javascript'; s.parentNode.insertBefore(v, s);
