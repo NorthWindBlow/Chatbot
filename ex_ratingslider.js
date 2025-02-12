@@ -7,6 +7,10 @@ export const RatingSlider = {
   render: ({ trace, element }) => {
     try {
       const { options, labels = [1, 100], submitEvent } = trace.payload;
+
+      if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
+        throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
+      }
       
       // 验证labels参数
       const validLabels = Array.isArray(labels) && labels.length >= 2;
