@@ -12,15 +12,15 @@
         min-height: 100vh;
       }
       #voiceflow-chat-frame {
-        /* 桌面端默认样式 */
         width: 80vmin;
         height: 80vmin;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         background: white;
+        border: 2px solid red !important; /* 调试边框 */
+        background-color: rgba(255, 0, 0, 0.1) !important; /* 调试背景 */
         
-        /* 移动端样式覆盖 */
         @media (max-width: 768px) {
           width: 100% !important;
           height: 100vh !important;
@@ -30,36 +30,29 @@
           left: 0;
         }
       }
-      #confetti-canvas {
-        position: fixed;
-        z-index: 999;
-        pointer-events: none;
-      }
-      
-      /* 调整聊天窗口样式 */
-      .vfrc-chat {
-        width: 100% !important;
-        height: 100% !important;
-        max-height: none !important;
-        border-radius: inherit !important;
-      }
-       /* 消息容器适配 */
-      .vfrc-chat-dialog {
-        height: calc(100% - 60px) !important;
+      .vfrc-launcher {
+        display: none !important;
       }
     </style>
   </head>
-  <body>    
+  <body>
+    <div id="voiceflow-chat-frame"></div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script type="module">
-      import { MultipleChoice } from './ex_multiplechoice.js';
-
       (function (d, t) {
-        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        var v = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
         v.onload = function () {
+          console.log('Voiceflow script loaded');
+          if (!window.voiceflow) {
+            console.error('Voiceflow object not found');
+            return;
+          }
           window.voiceflow.chat.load({
             verify: { projectID: '67aa9de7f1b2f4adafba5a03' },
             url: 'https://general-runtime.voiceflow.com',
-            versionID: 'production',
+            versionID: 'development',
+            user: { name: 'Demo User' },
             render: {
               mode: 'embedded',
               target: '#voiceflow-chat-frame',
@@ -67,29 +60,13 @@
             autostart: true,
             allowDangerousHTML: true,
             assistant: {
-              extensions: [
-                MultipleChoice,
-              ],
+              extensions: [],
             },
-            chatContainer: {
-              stylesheet: `
-                .vfrc-chat { 
-                  border-radius: inherit;
-                  box-shadow: none;
-                }
-                .vfrc-message { 
-                  max-width: 70%;
-                }
-                @media (max-width: 768px) {
-                  .vfrc-chat {
-                    border-radius: 0 !important;
-                  }
-                }
-              `
-            }
           });
         };
-        v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs'; v.type = 'text/javascript'; s.parentNode.insertBefore(v, s);
+        v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+        v.type = 'text/javascript';
+        s.parentNode.insertBefore(v, s);
       })(document, 'script');
     </script>
   </body>
