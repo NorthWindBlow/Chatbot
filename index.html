@@ -90,29 +90,10 @@
                 MultipleChoice,
               ],
               title: 'ARTM Agent',
-              stylesheet: `
-                /* 隐藏水印 */
-                /* 使用属性选择器增强特异性 */
-                div[class*="Watermark"] {
-                  display: none !important;
-                  visibility: hidden !important;
-                  height: 0 !important;
-                }
-    
-                /* 桌面端优化 */
-                .vfrc-chat {
-                  border-radius: inherit !important;
-                  box-shadow: none !important;
-                  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                }
-    
-                /* 消息气泡优化 */
-                .vfrc-message {
-                  max-width: 70% !important;
-                  border-radius: 18px !important;
-                  transition: transform 0.2s ease;
-                }
-              `
+              branding: {
+                footer: false,
+                customHTML: '<div class="custom-watermark">My Brand</div>'
+              }
           },
           });
         };
