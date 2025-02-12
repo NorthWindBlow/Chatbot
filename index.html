@@ -80,6 +80,30 @@
                 MultipleChoice,
               ],
             },
+            // Widget header
+            header: {
+              hideImage: true | false,
+              //imageUrl: 'https://company_domain.com/custom_image.jpg',
+              title: 'ARTM Agent',
+            },
+            // Welcome message
+            banner: {
+              hide: true | false,
+              title: 'Welcome',
+              description: 'How can I help you today?',
+              //imageUrl: 'https://company_domain.com/custom_image.jpg'
+            },
+          
+            // Agent avatar
+            avatar: {
+              hide: true | false,
+              //imageUrl: 'https://company_domain.com/custom_image.jpg'
+            },
+            
+            // input
+            inputPlaceholder: 'Message...'
+            // color: "string",
+            stylesheet: "string" //link to your self-hosted stylesheet
           });
         };
         v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs'; v.type = 'text/javascript'; s.parentNode.insertBefore(v, s);
