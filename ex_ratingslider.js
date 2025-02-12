@@ -18,7 +18,7 @@ export const RatingSlider = {
 
       // 生成刻度位置
       const labelPositions = labels.map((_, i) => 
-        Math.round((i / (labels.length - 1)) * 100
+        Math.round((i / (labels.length - 1)) * 100)
       );
 
       const container = document.createElement('div');
