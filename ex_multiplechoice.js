@@ -1,4 +1,4 @@
-/export const MultipleChoice = {
+export const MultipleChoice = {
   name: 'MultipleChoice',
   type: 'response',
   match: ({ trace }) =>
