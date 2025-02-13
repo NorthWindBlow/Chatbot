@@ -20,7 +20,7 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           width: min-content;
-          max-width: 85%;
+          max-width: 85% !important;
           margin: 0.5rem 0.5rem;
           padding-bottom: 10px;
         }
