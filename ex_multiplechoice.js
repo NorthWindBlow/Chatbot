@@ -19,33 +19,28 @@ export const MultipleChoice = {
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
-          display: inline-block;
-          max-width: 100% !important;
-          margin: 1rem 0;
-          position: relative;
+          width: fit-content;
+          max-width: 100%;
+          margin: 1rem auto;
         }
 
         .options-grid {
-          display: flex; /* 使用 CSS flex 布局来排列选项。 */
-          flex-wrap: wrap;
-          gap: 10px; /* 设置选项之间的间距为 10px。 */
           margin-bottom: 1rem; /* 在网格底部添加 1rem 的外边距。 */
           width: max-content;
           max-width: 100%;
         }
 
         .option {
-          position: relative; /* 设置相对定位，以便内部元素（如 input）可以绝对定位。 */
-          padding: 0.8rem; /* 设置选项的内边距为 0.8rem。 */
-          border: 1px solid #d2d2d7; /* 设置边框为 1px 的浅灰色。 */
-          border-radius: 8px; /* 设置圆角为 8px。 */
-          cursor: pointer; /* 将鼠标指针设置为手形，表示可点击。 */
-          transition: all 0.2s ease; /* 添加过渡效果，使样式变化更平滑。 */
-          background: transparent; /* 设置背景为透明。 */
-          flex: 0 1 auto;
-          min-width: min-content;
+          position: relative;
+          padding: 1rem;
+          border: 1px solid #d2d2d7;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: transparent;
           white-space: nowrap;
           max-width: 100%;
+          min-width: min-content;
         }
 
         .option:hover {
@@ -63,24 +58,22 @@ export const MultipleChoice = {
           position: absolute; /* 将输入框绝对定位，脱离文档流。 */
         }
 
+        /* 自动换行逻辑 */
         .option-text {
-          display: block; /* 将文本设置为块级元素，使其独占一行。 */
-          line-height: 1.2; /* 设置行高为 1.2，使文本更易读。 */
+          display: inline-block;
           overflow: hidden;
           text-overflow: ellipsis;
-          text-align: center; /* 文字居中显示 */
+          max-width: 100%;
         }
 
-        /* 自适应换行逻辑 */
-        .option.force-wrap {
-          white-space: normal;
-          word-break: break-word;
-        }
-
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
           .option {
             white-space: normal;
             word-break: break-word;
+          }
+          
+          .options-flow {
+            grid-template-columns: 1fr;
           }
         }
 
@@ -124,9 +117,9 @@ export const MultipleChoice = {
       form.className = 'mc-form';
       container.appendChild(form);
 
-      const flexContainer = document.createElement('div');
-      flexContainer.className = 'options-flex';
-      form.appendChild(flexContainer);
+      const flowContainer = document.createElement('div');
+      flowContainer.className = 'options-flow';
+      form.appendChild(flowContainer);
 
       // 创建选项
       options.forEach(option => {
@@ -142,36 +135,22 @@ export const MultipleChoice = {
           label.classList.toggle('selected', input.checked);
         });
 
-        flexContainer.appendChild(label);
+        flowContainer.appendChild(label);
       });
 
-      // 自适应宽度逻辑
-      const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
-          const containerWidth = entry.contentRect.width;
-          const options = entry.target.querySelectorAll('.option');
-          
-          options.forEach(option => {
-            const optionWidth = option.getBoundingClientRect().width;
-            // 如果选项宽度超过容器宽度的80%，强制换行
-            if (optionWidth > containerWidth * 0.8) {
-              option.classList.add('force-wrap');
-            } else {
-              option.classList.remove('force-wrap');
-            }
-          });
+      // 自动调整逻辑
+      const adjustLayout = () => {
+        const containerWidth = container.offsetWidth;
+        const parentWidth = container.parentElement.offsetWidth;
+        
+        flowContainer.style.gridTemplateColumns = containerWidth >= parentWidth 
+          ? 'repeat(auto-fill, minmax(min-content, 1fr))'
+          : 'repeat(auto-fit, minmax(120px, max-content))';
+      };
 
-          // 更新容器最大宽度
-          const maxRowWidth = Array.from(flexContainer.children).reduce((max, child) => {
-            const rect = child.getBoundingClientRect();
-            return Math.max(max, rect.left + rect.width - flexContainer.getBoundingClientRect().left);
-          }, 0);
-          
-          flexContainer.style.width = `${Math.min(maxRowWidth, entry.contentRect.width)}px`;
-        }
-      });
-
-      resizeObserver.observe(container);
+      // 初始化调整
+      adjustLayout();
+      window.addEventListener('resize', adjustLayout);
 
       // 其他选项处理
       const hasOtherOption = options.includes("Other");
@@ -231,6 +210,7 @@ export const MultipleChoice = {
       form.addEventListener('submit', submitHandler);
 
       return () => {
+        window.removeEventListener('resize', adjustLayout);
         form.removeEventListener('submit', submitHandler);
         container.remove();
       };
