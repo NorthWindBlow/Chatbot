@@ -30,7 +30,7 @@ export const MultipleChoice = {
           gap: 15px;
           margin-bottom: 24px;
           width: max-content;
-          max-width: 100%;
+          max-width: 85% !important;
         }
         .option {
           position: relative;
