@@ -20,9 +20,9 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           width: fit-content;
-          max-width: 90%;
-          margin: 1rem auto;
-          padding-bottom: 10px;
+          max-width: 100%;
+          margin: 1rem 1rem;
+          padding-bottom: 5px;
         }
         .options-flow {
           display: flex;
