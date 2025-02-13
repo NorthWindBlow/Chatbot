@@ -19,7 +19,7 @@ export const MultipleChoice = {
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
-          width: min-content;
+          width: fit-content;
           max-width: 100%;
           margin: 0.5rem 0.5rem;
           padding: 10px 10px 10px; /* 上10 左右10 下10 */
