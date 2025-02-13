@@ -20,7 +20,7 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           width: fit-content;
-          max-width: 85% !important;
+          max-width: 600px; //85% !important;
           margin: 0.5rem 0.5rem;
           padding-bottom: 10px;
         }
@@ -30,7 +30,7 @@ export const MultipleChoice = {
           gap: 15px;
           margin-bottom: 24px;
           width: max-content;
-          max-width: 85% !important;
+          max-width: 100%;
         }
         .option {
           position: relative;
