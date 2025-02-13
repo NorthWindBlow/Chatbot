@@ -6,7 +6,7 @@ export const MultipleChoice = {
 
   render: ({ trace, element }) => {
     try {
-      const { options, selectionLimit = 1, submitEvent } = trace.payload;
+      const { options, selectionLimit = 999, submitEvent } = trace.payload;
 
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
