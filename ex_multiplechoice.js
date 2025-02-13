@@ -20,9 +20,11 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           width: fit-content;
-          max-width: 400px; //85% !important;
+          max-width: 85vw;
           margin: 0.5rem 0.5rem;
           padding-bottom: 10px;
+          padding: 10px 10px 10px; /* 上15 左右20 下10 */
+          background-color: #f0f0f0;
         }
         .options-flow {
           display: flex;
