@@ -30,7 +30,7 @@ export const MultipleChoice = {
           flex-wrap: wrap;
           gap: 15px;
           margin-bottom: 24px;
-          width: fit-content;
+          width: auto;
           max-width: 85%;
         }
         .option {
