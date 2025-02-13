@@ -20,14 +20,14 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           width: fit-content;
-          max-width: 90%;
+          max-width: 100%;
           margin: 1rem auto;
           padding-bottom: 20px; /* 为按钮预留空间 */
         }
 
         .options-flow {
           display: flex;
-          // grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+          flex-wrap: wrap;
           gap: 15px; /* 增加选项间距 */
           margin-bottom: 24px; /* 增加与按钮的间距 */
           width: max-content;
@@ -45,7 +45,7 @@ export const MultipleChoice = {
           white-space: nowrap;
           max-width: 100%;
           min-width: min-content;
-          min-height: 40px; /* 减小最小高度 */
+          min-height: min-content;
           display: flex;
           align-items: center;
           justify-content: center
