@@ -19,16 +19,19 @@ export const MultipleChoice = {
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
-          transition: width 0.3s ease; /* 添加平滑过渡效果 */
-          max-width: 100%; /* 确保不超过父容器 */
-          margin: auto auto; /* 设置容器上下边距为 1rem，左右边距为 auto，使容器水平居中。 */
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 1rem 0;
         }
 
         .options-grid {
           display: grid; /* 使用 CSS Grid 布局来排列选项。 */
-          grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* 自动调整列数，以适应容器宽度。每列的最小宽度为 60px，最大宽度为剩余空间的等分（1fr）。 */
+          grid-auto-flow: column;
+          grid-auto-columns: minmax(0, 1fr);
           gap: 10px; /* 设置选项之间的间距为 10px。 */
           margin-bottom: 1rem; /* 在网格底部添加 1rem 的外边距。 */
+          overflow-x: auto;  /* 允许横向滚动 */
+          padding-bottom: 4px;  /* 给滚动条留空间 */
         }
 
         .option {
@@ -39,6 +42,8 @@ export const MultipleChoice = {
           cursor: pointer; /* 将鼠标指针设置为手形，表示可点击。 */
           transition: all 0.2s ease; /* 添加过渡效果，使样式变化更平滑。 */
           background: transparent; /* 设置背景为透明。 */
+          min-width: max-content;  /* 根据内容调整宽度 */
+          white-space: nowrap;  /* 禁止文字换行 */
         }
 
         .option:hover {
@@ -59,9 +64,19 @@ export const MultipleChoice = {
         .option-text {
           display: block; /* 将文本设置为块级元素，使其独占一行。 */
           line-height: 1.2; /* 设置行高为 1.2，使文本更易读。 */
-          word-break: break-word;
-          hyphens: auto; /* 添加自动连字符 */
+          overflow: hidden;
+          text-overflow: ellipsis;
           text-align: center; /* 文字居中显示 */
+        }
+
+        /* 隐藏滚动条（可选） */
+        .options-grid::-webkit-scrollbar {
+          height: 4px;
+          background: transparent;
+        }
+        .options-grid::-webkit-scrollbar-thumb {
+          background: #ddd;
+          border-radius: 2px;
         }
 
         .mc-form button[type="submit"] {
