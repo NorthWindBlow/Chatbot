@@ -26,8 +26,8 @@ export const MultipleChoice = {
         }
 
         .options-flow {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+          display: flex;
+          // grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
           gap: 15px; /* 增加选项间距 */
           margin-bottom: 24px; /* 增加与按钮的间距 */
           width: max-content;
