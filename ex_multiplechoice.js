@@ -19,19 +19,19 @@ export const MultipleChoice = {
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
-          width: 100% !important;
+          display: inline-block;
           max-width: 100% !important;
           margin: 1rem 0;
+          position: relative;
         }
 
         .options-grid {
-          display: grid; /* 使用 CSS Grid 布局来排列选项。 */
-          grid-auto-flow: column;
-          grid-auto-columns: minmax(0, 1fr);
+          display: flex; /* 使用 CSS flex 布局来排列选项。 */
+          flex-wrap: wrap;
           gap: 10px; /* 设置选项之间的间距为 10px。 */
           margin-bottom: 1rem; /* 在网格底部添加 1rem 的外边距。 */
-          overflow-x: auto;  /* 允许横向滚动 */
-          padding-bottom: 4px;  /* 给滚动条留空间 */
+          width: max-content;
+          max-width: 100%;
         }
 
         .option {
@@ -42,8 +42,10 @@ export const MultipleChoice = {
           cursor: pointer; /* 将鼠标指针设置为手形，表示可点击。 */
           transition: all 0.2s ease; /* 添加过渡效果，使样式变化更平滑。 */
           background: transparent; /* 设置背景为透明。 */
-          min-width: max-content;  /* 根据内容调整宽度 */
-          white-space: nowrap;  /* 禁止文字换行 */
+          flex: 0 1 auto;
+          min-width: min-content;
+          white-space: nowrap;
+          max-width: 100%;
         }
 
         .option:hover {
@@ -69,14 +71,17 @@ export const MultipleChoice = {
           text-align: center; /* 文字居中显示 */
         }
 
-        /* 隐藏滚动条（可选） */
-        .options-grid::-webkit-scrollbar {
-          height: 4px;
-          background: transparent;
+        /* 自适应换行逻辑 */
+        .option.force-wrap {
+          white-space: normal;
+          word-break: break-word;
         }
-        .options-grid::-webkit-scrollbar-thumb {
-          background: #ddd;
-          border-radius: 2px;
+
+        @media (max-width: 480px) {
+          .option {
+            white-space: normal;
+            word-break: break-word;
+          }
         }
 
         .mc-form button[type="submit"] {
@@ -119,9 +124,9 @@ export const MultipleChoice = {
       form.className = 'mc-form';
       container.appendChild(form);
 
-      const grid = document.createElement('div');
-      grid.className = 'options-grid';
-      form.appendChild(grid);
+      const flexContainer = document.createElement('div');
+      flexContainer.className = 'options-flex';
+      form.appendChild(flexContainer);
 
       // 创建选项
       options.forEach(option => {
@@ -137,8 +142,36 @@ export const MultipleChoice = {
           label.classList.toggle('selected', input.checked);
         });
 
-        grid.appendChild(label);
+        flexContainer.appendChild(label);
       });
+
+      // 自适应宽度逻辑
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          const containerWidth = entry.contentRect.width;
+          const options = entry.target.querySelectorAll('.option');
+          
+          options.forEach(option => {
+            const optionWidth = option.getBoundingClientRect().width;
+            // 如果选项宽度超过容器宽度的80%，强制换行
+            if (optionWidth > containerWidth * 0.8) {
+              option.classList.add('force-wrap');
+            } else {
+              option.classList.remove('force-wrap');
+            }
+          });
+
+          // 更新容器最大宽度
+          const maxRowWidth = Array.from(flexContainer.children).reduce((max, child) => {
+            const rect = child.getBoundingClientRect();
+            return Math.max(max, rect.left + rect.width - flexContainer.getBoundingClientRect().left);
+          }, 0);
+          
+          flexContainer.style.width = `${Math.min(maxRowWidth, entry.contentRect.width)}px`;
+        }
+      });
+
+      resizeObserver.observe(container);
 
       // 其他选项处理
       const hasOtherOption = options.includes("Other");
