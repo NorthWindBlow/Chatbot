@@ -32,6 +32,7 @@ export const MultipleChoice = {
           width: auto;
           max-width: 85%;
           justify-content: flex-start; /* 左对齐防止间隙不均 */
+          background: #2196f3;
         }
         .option {
           position: relative;
