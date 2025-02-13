@@ -20,7 +20,7 @@ export const MultipleChoice = {
       style.textContent = `
         .multiple-choice-container {
           width: fit-content;
-          max-width: 100%;
+          max-width: 90%;
           margin: 1rem auto;
           padding-bottom: 20px; /* 为按钮预留空间 */
         }
