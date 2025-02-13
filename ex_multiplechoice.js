@@ -21,8 +21,8 @@ export const MultipleChoice = {
         .multiple-choice-container {
           width: fit-content;
           max-width: 100%;
-          margin: 0.5rem 0.5rem;
-          padding-bottom: 0.5rem;
+          margin: auto auto;
+          padding-bottom: 10px;
         }
         .options-flow {
           display: flex;
