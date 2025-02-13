@@ -6,7 +6,7 @@ export const MultipleChoice = {
 
   render: ({ trace, element }) => {
     try {
-      const { options, submitEvent } = trace.payload;
+      const { options, selectionLimit = 999, submitEvent } = trace.payload;
 
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
@@ -15,28 +15,26 @@ export const MultipleChoice = {
       const container = document.createElement('div');
       container.className = 'multiple-choice-container';
 
-      // 简化容器样式
+      // 样式定义
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
           width: fit-content;
           max-width: 100%;
           margin: 1rem auto;
-          padding-bottom: 20px; /* 为按钮预留空间 */
+          padding-bottom: 20px;
         }
-
         .options-flow {
           display: flex;
           flex-wrap: wrap;
-          gap: 15px; /* 增加选项间距 */
-          margin-bottom: 24px; /* 增加与按钮的间距 */
+          gap: 15px;
+          margin-bottom: 24px;
           width: max-content;
           max-width: 100%;
         }
-
         .option {
           position: relative;
-          padding: 0.6rem 1rem; /* 减小垂直padding */
+          padding: 0.6rem 1rem;
           border: 1px solid #d2d2d7;
           border-radius: 8px;
           cursor: pointer;
@@ -48,78 +46,66 @@ export const MultipleChoice = {
           min-height: min-content;
           display: flex;
           align-items: center;
-          justify-content: center
+          justify-content: center;
         }
-
         .option:hover {
-          background: #f0f0f0 !important; /* 定义鼠标悬停时选项的样式。 */
+          background: #f0f0f0 !important;
         }
-
         .option.selected {
-          background: #007AFF !important; /* 定义选中选项的样式。将背景色改为蓝色。 */
-          border-color: #007AFF; /* 将边框颜色改为蓝色。 */
-          color: white; /* 将文字颜色改为白色。 */
+          background: #007AFF !important;
+          border-color: #007AFF;
+          color: white;
         }
-
         .option input {
-          opacity: 0; /* 将输入框的透明度设置为 0，使其不可见。 */
-          position: absolute; /* 将输入框绝对定位，脱离文档流。 */
+          opacity: 0;
+          position: absolute;
         }
-
-        /* 自动换行逻辑 */
         .option-text {
           display: block;
-          line-height: 1.3; /* 减小行高 */
+          line-height: 1.3;
           overflow: hidden;
           text-overflow: ellipsis;
           max-width: 100%;
           white-space: nowrap;
         }
-
         @media (max-width: 768px) {
           .option {
             white-space: normal;
             word-break: break-word;
           }
-          
           .options-flow {
             grid-template-columns: 1fr;
           }
         }
-
         .mc-form button[type="submit"] {
-          background: linear-gradient(135deg, #007AFF, #0063CC); /* 设置渐变色背景。 */
-          color: white; /* 设置文字颜色为白色。 */
-          border: none; /* 移除边框。 */
-          padding: 0.5rem 1.5rem; /* 设置内边距。 */
-          border-radius: 8px; /* 设置圆角。 */
-          font-size: 1rem; /* 设置字体大小。 */
-          cursor: pointer; /* 将鼠标指针设置为手形。 */
-          transition: all 0.2s ease; /* 添加过渡效果。 */
-          display: block; /* 将按钮设置为块级元素。 */
-          margin: 0 auto; /* 使按钮水平居中。 */
-          width: fit-content; /* 让按钮宽度自适应内容。 */
+          background: linear-gradient(135deg, #007AFF, #0063CC);
+          color: white;
+          border: none;
+          padding: 0.5rem 1.5rem;
+          border-radius: 8px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: block;
+          margin: 0 auto;
+          width: fit-content;
         }
-
         .mc-form button[type="submit"]:hover {
-          transform: translateY(-1px); /* 将按钮向上移动 1px，产生悬浮效果。 */
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 添加阴影效果。 */
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
         .other-input {
-          margin-top: 0.5rem; /* "Other" 输入框与选项之间的距离 */
-          margin-bottom: 1rem; /* "Other" 输入框与提交按钮之间的距离 */
+          margin-top: 0.5rem;
+          margin-bottom: 1rem;
         }
-
         .other-input input {
-          width: 90%; /* 设置输入框宽度为 80%。 */
-          padding: 0.5rem; /* 设置内边距。 */
-          border: 1px solid #d2d2d7; /* 设置边框。 */
-          border-radius: 8px; /* 设置圆角。 */
-          margin-top: 0.2rem; /* 设置上边距为 0.2rem。 */
+          width: 90%;
+          padding: 0.5rem;
+          border: 1px solid #d2d2d7;
+          border-radius: 8px;
+          margin-top: 0.2rem;
         }
       `;
-
       container.appendChild(style);
       element.appendChild(container);
 
@@ -139,30 +125,27 @@ export const MultipleChoice = {
           <input type="checkbox" name="option" value="${option}">
           <span class="option-text">${option}</span>
         `;
-
         const input = label.querySelector('input');
+        // 监听选中状态变化，更新样式并检查选择数量限制
         input.addEventListener('change', () => {
           label.classList.toggle('selected', input.checked);
+          updateCheckboxState();
         });
-
         flowContainer.appendChild(label);
       });
 
-      // 自动调整逻辑
+      // 自动调整布局
       const adjustLayout = () => {
         const containerWidth = container.offsetWidth;
         const parentWidth = container.parentElement.offsetWidth;
-        
         flowContainer.style.gridTemplateColumns = containerWidth >= parentWidth 
           ? 'repeat(auto-fill, minmax(min-content, 1fr))'
           : 'repeat(auto-fit, minmax(120px, max-content))';
       };
-
-      // 初始化调整
       adjustLayout();
       window.addEventListener('resize', adjustLayout);
 
-      // 其他选项处理
+      // “Other”选项处理
       const hasOtherOption = options.includes("Other");
       let otherInputContainer;
       if (hasOtherOption) {
@@ -172,13 +155,25 @@ export const MultipleChoice = {
           <input type="text" id="other-option" placeholder="Please type your answer">
         `;
         form.appendChild(otherInputContainer);
-
         const otherCheckbox = form.querySelector('input[value="Other"]');
-        otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none'; // 初始化时设置显示状态
+        otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
         otherCheckbox.addEventListener('change', () => {
           otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
+          updateCheckboxState();
         });
       }
+
+      // 根据已选数量更新其他选项的禁用状态
+      const updateCheckboxState = () => {
+        const checkboxes = Array.from(form.querySelectorAll('input[name="option"]'));
+        const checkedCount = checkboxes.filter(cb => cb.checked).length;
+        // 当达到上限时，禁用未选中的复选框，否则恢复可用状态
+        checkboxes.forEach(cb => {
+          if (!cb.checked) {
+            cb.disabled = checkedCount >= selectionLimit;
+          }
+        });
+      };
 
       // 提交按钮
       const submitButton = document.createElement('button');
@@ -186,13 +181,14 @@ export const MultipleChoice = {
       submitButton.textContent = 'Submit';
       form.appendChild(submitButton);
 
+      // 提交处理函数
       const submitHandler = (event) => {
         event.preventDefault();
 
-        // 获取原始选中项（包含 "Other"）
+        // 获取所有选中的选项（包括 “Other” 选项）
         let selectedOptions = Array.from(form.querySelectorAll('input[name="option"]:checked'))
           .map(cb => cb.value);
-        
+
         if (hasOtherOption && selectedOptions.includes("Other")) {
           const otherValue = form.querySelector('#other-option').value.trim();
           if (otherValue) selectedOptions.push(otherValue);
@@ -203,7 +199,7 @@ export const MultipleChoice = {
           return;
         }
 
-        // 禁用组件
+        // 禁用所有输入控件，防止重复提交
         form.querySelectorAll('input, button').forEach(el => el.disabled = true);
         submitButton.textContent = 'Submitted';
         submitButton.style.backgroundColor = '#808080';
@@ -219,6 +215,7 @@ export const MultipleChoice = {
 
       form.addEventListener('submit', submitHandler);
 
+      // 清理工作
       return () => {
         window.removeEventListener('resize', adjustLayout);
         form.removeEventListener('submit', submitHandler);
