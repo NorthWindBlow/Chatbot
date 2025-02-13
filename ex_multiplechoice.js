@@ -22,17 +22,21 @@ export const MultipleChoice = {
           width: fit-content;
           max-width: 100%;
           margin: 1rem auto;
+          padding-bottom: 20px; /* 为按钮预留空间 */
         }
 
-        .options-grid {
-          margin-bottom: 1rem; /* 在网格底部添加 1rem 的外边距。 */
+        .options-flow {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+          gap: 15px; /* 增加选项间距 */
+          margin-bottom: 24px; /* 增加与按钮的间距 */
           width: max-content;
           max-width: 100%;
         }
 
         .option {
           position: relative;
-          padding: 1rem;
+          padding: 0.6rem 1rem; /* 减小垂直padding */
           border: 1px solid #d2d2d7;
           border-radius: 8px;
           cursor: pointer;
@@ -41,6 +45,10 @@ export const MultipleChoice = {
           white-space: nowrap;
           max-width: 100%;
           min-width: min-content;
+          min-height: 40px; /* 减小最小高度 */
+          display: flex;
+          align-items: center;
+          justify-content: center
         }
 
         .option:hover {
@@ -60,10 +68,12 @@ export const MultipleChoice = {
 
         /* 自动换行逻辑 */
         .option-text {
-          display: inline-block;
+          display: block;
+          line-height: 1.3; /* 减小行高 */
           overflow: hidden;
           text-overflow: ellipsis;
           max-width: 100%;
+          white-space: nowrap;
         }
 
         @media (max-width: 768px) {
