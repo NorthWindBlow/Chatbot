@@ -99,7 +99,7 @@ export const MultipleChoice = {
           margin-bottom: 1rem;
         }
         .other-input input {
-          width: 90%;
+          width: 100%;
           padding: 0.5rem;
           border: 1px solid #d2d2d7;
           border-radius: 8px;
