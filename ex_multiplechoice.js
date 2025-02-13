@@ -19,8 +19,8 @@ export const MultipleChoice = {
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
-          width: fit-content;
-          max-width: 85% !important;
+          width: min-content;
+          max-width: 100%;
           margin: auto auto;
           padding-bottom: 10px;
         }
