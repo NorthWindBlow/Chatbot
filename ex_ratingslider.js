@@ -34,7 +34,7 @@ export const RatingSlider = {
       const style = document.createElement('style');
       style.textContent = `
         .rating-slider-container {
-          width: 85%;
+          width: 100%;
           max-width: 100%;
           margin: 0 auto;
           padding: 1rem;
@@ -81,6 +81,7 @@ export const RatingSlider = {
           font-size: 0.85em;
           color: #666;
           white-space: nowrap;
+          top: -20px;
         }
 
         .scale-label:first-child {
