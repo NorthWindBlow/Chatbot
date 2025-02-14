@@ -1,222 +1,273 @@
-export const SortableList = {
-  name: 'SortableList',
+export const RatingSlider = {
+  name: 'RatingSlider',
   type: 'response',
-  match: ({ trace }) =>
-    trace.type === 'sortable_list' || trace.payload.name === 'sortable_list',
+  match: ({ trace }) => 
+    trace.type === 'rating_slider' || trace.payload.name === 'rating_slider',
 
   render: ({ trace, element }) => {
     try {
-      let { options, submitEvent } = trace.payload;
-
+      let { options, labels = [1, 100], submitEvent } = trace.payload;
+      
+      // 输入验证
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
-        throw new Error(
-          "Missing required input variables: options (non-empty array) or submitEvent"
-        );
+        throw new Error("Missing required parameters");
       }
-
+      if (!Array.isArray(labels) || labels.length < 2) {
+        throw new Error("Labels must be an array with at least 2 elements");
+      }
+      
       // 如果 options 是数组，则过滤掉其中的 "None" 元素
-      options = options.filter(item => item !== "None");
+      options = Array.isArray(options)
+        ? options.filter(item => item !== "None")
+        : options;
 
-      // 创建外层容器
-      const sortableContainer = document.createElement("div");
-      sortableContainer.className = "sortable-container";
 
-      // 添加样式
-      const style = document.createElement("style");
+      // 生成刻度位置
+      const labelPositions = labels.map((_, i) => 
+        Math.round((i / (labels.length - 1)) * 100)
+      );
+
+      const container = document.createElement('div');
+      container.className = 'rating-slider-container';
+
+      // 样式定义
+      const style = document.createElement('style');
       style.textContent = `
-        .sortable-container {
+        .rating-slider-container {
           width: auto;
           max-width: 100%;
-          margin: 1rem auto;
-        }
-        .sortable-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 15px;
-          margin-bottom: 24px;
-          width: auto;
-          max-width: 100%;
-          justify-content: flex-start;
-        }
-        .sortable-item {
-          position: relative;
+          margin: 0 auto;
           padding: 1rem;
-          background: transparent;
-          border: 2px solid #007AFF;
-          border-radius: 8px;
-          cursor: move;
-          transition: all 0.2s ease;
-          user-select: none;
-          touch-action: none;
-          white-space: nowrap;
-          max-width: 100%;
-          min-width: min-content;
-          min-height: min-content;
+          font-family: -apple-system, sans-serif;
+        }
+
+        .option-row {
           display: flex;
           align-items: center;
-          justify-content: center;
+          margin: 2rem 0;
+          position: relative;
+          width: 100%;
+          max-width: 100%;
         }
-        .sortable-item.dragging {
-          opacity: 0.5;
+
+        .option-label {
+          flex: 0 0 auto;
+          margin-right: 1rem;
+          font-weight: 500;
+          color: #333;
+          width: 120px; /* 固定宽度，确保每一行相同 */
+          white-space: normal;
+          word-break: break-word;
         }
-        .sortable-item.placeholder {
-          border: 2px dashed #007AFF;
-          background: #f0f8ff;
+
+        .slider-container {
+          flex: 1;
+          position: relative;
+          height: 30px;
         }
+
+        .scale-labels {
+          display: flex;
+          justify-content: space-between;
+          position: absolute;
+          width: 100%;
+          top: -20px;
+          pointer-events: none;
+        }
+
+        .scale-label {
+          position: absolute;
+          transform: translateX(-50%);
+          font-size: 0.85em;
+          color: #666;
+          white-space: nowrap;
+          top: 10px;
+        }
+
+        .scale-label:first-child {
+          left: 0;
+          transform: translateX(0); /* 首标签左对齐 */
+        }
+
+        .scale-label:last-child {
+          left: 100%;
+          transform: translateX(-100%); /* 尾标签右对齐 */
+        }
+
+        input[type="range"] {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 4px;
+          background: #ddd;
+          border-radius: 2px;
+          margin: 15px 0;
+          outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 16px;
+          height: 16px;
+          background: #007AFF;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: transform 0.2s;
+        }
+
+        .value-display {
+          margin-left: 1rem;
+          min-width: 60px;
+          text-align: center;
+          font-weight: 300;
+          color: #007AFF;
+          font-size: 1.1em;
+          position: relative;
+          top: -10px; /* 向上移动 10 像素 */
+        }
+
         .submit-btn {
+          display: block;
+          margin: 1rem auto 0.5rem auto; /* 上边距2rem，底边距0.5rem */
+          padding: 12px 36px;
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
           border: none;
-          padding: 0.75rem 2rem;
           border-radius: 8px;
-          font-size: 1rem;
+          font-size: 1.1em;
           cursor: pointer;
-          transition: all 0.2s ease;
-          display: block;
-          margin: 0 auto;
+          transition: all 0.2s;
         }
+
         .submit-btn:disabled {
-          background: #808080;
+          background: #999;
           cursor: not-allowed;
         }
+
+        .submit-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
       `;
-      sortableContainer.appendChild(style);
+      container.appendChild(style);
 
-      // 创建表单和排序列表容器
-      const formElement = document.createElement("form");
-      const sortableList = document.createElement("div");
-      sortableList.className = "sortable-list";
-      formElement.appendChild(sortableList);
-
-      // 用于记录当前拖拽项、占位项以及排序结果
-      let dragItem = null;
-      let placeholderItem = null;
-      let currentOrder = [...options];
-
-      // 根据文本创建排序项元素
-      const createSortableItem = (text) => {
-        const item = document.createElement("div");
-        item.className = "sortable-item";
-        item.draggable = true;
-        item.textContent = text;
-
-        // 拖拽事件
-        item.addEventListener("dragstart", handleDragStart);
-        item.addEventListener("dragend", handleDragEnd);
-        return item;
+      // 工具函数：找到最近刻度
+      const findNearestPosition = (value) => {
+        return labelPositions.reduce((prev, curr) => 
+          Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+        );
       };
 
-      // 初始化排序列表
+      // 工具函数：获取标签索引
+      const getLabelIndex = (value) => {
+        return labelPositions.findIndex(pos => pos === value);
+      };
+
+      // 创建主滑块行
       options.forEach(option => {
-        sortableList.appendChild(createSortableItem(option));
+        const row = document.createElement('div');
+        row.className = 'option-row';
+
+        const label = document.createElement('div');
+        label.className = 'option-label';
+        label.textContent = option;
+
+        const sliderContainer = document.createElement('div');
+        sliderContainer.className = 'slider-container';
+
+        // 主滑块
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = 0;
+        slider.max = 100;
+        slider.value = 50;
+
+        // 刻度标签
+        const scaleLabels = document.createElement('div');
+        scaleLabels.className = 'scale-labels';
+        //labels.forEach((text, i) => {
+        //  const span = document.createElement('span');
+        //  span.className = 'scale-label';
+        //  span.textContent = text;
+        //  span.style.left = `${labelPositions[i]}%`;
+        //  scaleLabels.appendChild(span);
+        //});
+        const firstLabel = document.createElement('span');
+        firstLabel.className = 'scale-label';
+        firstLabel.textContent = labels[0];
+        const lastLabel = document.createElement('span');
+        lastLabel.className = 'scale-label';
+        lastLabel.textContent = labels[labels.length - 1];
+
+        scaleLabels.appendChild(firstLabel);
+        scaleLabels.appendChild(lastLabel);
+        
+
+        // 数值显示
+        const valueDisplay = document.createElement('div');
+        valueDisplay.className = 'value-display';
+        
+        // 更新显示
+        const updateDisplay = (value) => {
+          const snapValue = findNearestPosition(value);
+          const labelIndex = getLabelIndex(snapValue);
+          valueDisplay.textContent = labels[labelIndex] || snapValue;
+          slider.value = snapValue;
+        };
+
+        // 事件监听
+        slider.addEventListener('input', (e) => updateDisplay(e.target.value));
+
+        // 初始化显示
+        updateDisplay(slider.value);
+
+        // 组装组件
+        sliderContainer.appendChild(slider);
+        sliderContainer.appendChild(scaleLabels);
+        sliderContainer.appendChild(valueDisplay);
+        row.appendChild(label);
+        row.appendChild(sliderContainer);
+        container.appendChild(row);
       });
 
-      // 拖拽开始：创建占位元素，并隐藏原拖拽项
-      function handleDragStart(e) {
-        dragItem = this;
-        // 创建占位元素，并设置相同的宽高
-        placeholderItem = document.createElement("div");
-        placeholderItem.className = "sortable-item placeholder";
-        placeholderItem.style.width = `${dragItem.offsetWidth}px`;
-        placeholderItem.style.height = `${dragItem.offsetHeight}px`;
-
-        // 将占位元素插入到当前项后面
-        sortableList.insertBefore(placeholderItem, dragItem.nextSibling);
-
-        // 标记拖拽项并隐藏
-        dragItem.classList.add("dragging");
-        setTimeout(() => {
-          dragItem.style.display = "none";
-        }, 0);
-      }
-
-      // 拖拽过程中：根据鼠标位置移动占位元素
-      function handleDragOver(e) {
+      // 提交按钮
+      const submitButton = document.createElement('button');
+      submitButton.className = 'submit-btn';
+      submitButton.textContent = 'Submit';
+      
+      submitButton.onclick = (e) => {
         e.preventDefault();
-        if (!dragItem || !placeholderItem) return;
-        // 获取离鼠标位置最近的非拖拽、非占位元素
-        const afterElement = getNearestElement(sortableList, e.clientX, e.clientY);
-        if (afterElement) {
-          sortableList.insertBefore(placeholderItem, afterElement);
-        } else {
-          sortableList.appendChild(placeholderItem);
-        }
-      }
-
-      // 拖拽结束：将拖拽项插回占位位置，并更新排序结果
-      function handleDragEnd() {
-        dragItem.style.display = "";
-        dragItem.classList.remove("dragging");
-        if (placeholderItem && placeholderItem.parentElement) {
-          sortableList.insertBefore(dragItem, placeholderItem);
-          placeholderItem.remove();
-        }
-        // 根据 DOM 顺序更新排序
-        currentOrder = Array.from(sortableList.children).map(
-          child => child.textContent
-        );
-        dragItem = null;
-        placeholderItem = null;
-      }
-
-      // 工具函数：根据鼠标位置获取最近的排序项（不包含拖拽项与占位项）
-      function getNearestElement(container, x, y) {
-        const items = Array.from(
-          container.querySelectorAll(".sortable-item:not(.dragging):not(.placeholder)")
-        );
-        let closest = { distance: Number.POSITIVE_INFINITY, element: null };
-        items.forEach(item => {
-          const rect = item.getBoundingClientRect();
-          const itemCenterX = rect.left + rect.width / 2;
-          const itemCenterY = rect.top + rect.height / 2;
-          const dx = x - itemCenterX;
-          const dy = y - itemCenterY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < closest.distance) {
-            closest = { distance, element: item };
-          }
+        const results = Array.from(container.querySelectorAll('.option-row')).map(row => {
+          const value = parseInt(row.querySelector('input').value);
+          return {
+            option: row.querySelector('.option-label').textContent,
+            score: value,
+            display: labels[getLabelIndex(value)] || value
+          };
         });
-        return closest.element;
-      }
-
-      // 给排序列表容器添加拖拽过程监听（确保整个区域都能响应拖拽移动）
-      sortableList.addEventListener("dragover", handleDragOver);
-
-      // 提交按钮及提交处理函数
-      const submitButton = document.createElement("button");
-      submitButton.type = "submit";
-      submitButton.className = "submit-btn";
-      submitButton.textContent = "Submit Order";
-      formElement.appendChild(submitButton);
-
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        submitButton.disabled = true;
-        submitButton.textContent = "Submitting...";
 
         window.voiceflow.chat.interact({
           type: submitEvent,
           payload: {
-            sortedOptions: currentOrder,
-            confirmation: "Order submitted successfully"
+            ratings: results,
+            confirmation: 'Options submitted successfully'
           }
         });
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitted';
       };
 
-      formElement.addEventListener("submit", handleSubmit);
-      sortableContainer.appendChild(formElement);
-      element.appendChild(sortableContainer);
+      container.appendChild(submitButton);
+      element.appendChild(container);
 
-      // 返回清理函数，移除事件监听和 DOM 节点
-      return () => {
-        formElement.removeEventListener("submit", handleSubmit);
-        sortableList.removeEventListener("dragover", handleDragOver);
-        sortableContainer.remove();
-      };
+      return () => container.remove();
 
     } catch (error) {
-      console.error("SortableList Component Error:", error.message);
+      console.error("RatingSlider Error:", error.message);
+      const errorDiv = document.createElement('div');
+      errorDiv.style.color = 'red';
+      errorDiv.textContent = `评分组件加载失败: ${error.message}`;
+      element.appendChild(errorDiv);
     }
   }
 };
-
