@@ -16,6 +16,12 @@ export const RatingSlider = {
         throw new Error("Labels must be an array with at least 2 elements");
       }
 
+      // 如果 options 是数组，则过滤掉其中的 "None" 元素
+      const options = Array.isArray(originalOptions)
+        ? originalOptions.filter(item => item !== "None")
+        : originalOptions;
+
+
       // 生成刻度位置
       const labelPositions = labels.map((_, i) => 
         Math.round((i / (labels.length - 1)) * 100)
