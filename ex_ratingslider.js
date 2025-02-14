@@ -127,7 +127,7 @@ export const RatingSlider = {
 
         .submit-btn {
           display: block;
-          margin: 2rem auto;
+          margin: 2rem auto 0.5rem auto; /* 上边距2rem，底边距0.5rem */
           padding: 12px 36px;
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
