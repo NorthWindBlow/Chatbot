@@ -8,168 +8,189 @@ export const SortableList = {
     try {
       let { options, submitEvent } = trace.payload;
       
+      // 参数验证
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
-        throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
+        throw new Error("Missing required input: options (non-empty array) and submitEvent");
       }
 
-      // 如果 options 是数组，则过滤掉其中的 "None" 元素
-      options = Array.isArray(options)
-        ? options.filter(item => item !== "None")
-        : options;
+      // 过滤无效选项
+      const filteredOptions = options.filter(item => item !== "None");
+      if (filteredOptions.length === 0) {
+        throw new Error("No valid options after filtering");
+      }
 
       const container = document.createElement('div');
       container.className = 'sortable-container';
 
+      // 样式改进
       const style = document.createElement('style');
       style.textContent = `
         .sortable-container {
-          width: auto;
-          max-width: 100%;
+          width: 100%;
+          max-width: 800px;
           margin: 1rem auto;
+          padding: 0 15px;
         }
 
-        .sortable-flow {
+        .sortable-list {
           display: flex;
           flex-wrap: wrap;
-          gap: 15px;
+          gap: 12px;
           margin-bottom: 24px;
-          width: auto;
-          max-width: 100%;
-          justify-content: space-between; /* 智能分配行内空间 */
+          position: relative;
+          min-height: 60px;
         }
 
         .sortable-item {
-          position: relative;
-          padding: 1rem;
-          background: transparent;
+          padding: 12px 20px;
+          background: rgba(0, 122, 255, 0.1);
           border: 2px solid #007AFF;
           border-radius: 8px;
           cursor: move;
           transition: all 0.2s ease;
           user-select: none;
           touch-action: none;
-          white-space: nowrap;
-          max-width: 100%;
-          min-width: min-content;
-          min-height: min-content;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          position: relative;
+          z-index: 1;
         }
 
         .sortable-item.dragging {
-          background: #007AFF !important;
+          background: #007AFF;
           color: white;
-          z-index: 1000;
+          z-index: 2;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          transform: scale(1.02);
+          opacity: 0.8;
         }
 
-        .sortable-item.over {
+        .phantom-placeholder {
           border: 2px dashed #007AFF;
+          background: rgba(0, 122, 255, 0.05);
+          border-radius: 8px;
+          position: relative;
+          z-index: 0;
         }
 
         .submit-btn {
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
           border: none;
-          padding: 0.75rem 2rem;
+          padding: 12px 32px;
           border-radius: 8px;
           font-size: 1rem;
           cursor: pointer;
           transition: all 0.2s ease;
           display: block;
-          margin: 0 auto;
+          margin: 20px auto 0;
         }
 
         .submit-btn:disabled {
-          background: #808080;
+          opacity: 0.7;
           cursor: not-allowed;
         }
       `;
       container.appendChild(style);
 
       const form = document.createElement('form');
-      const flow = document.createElement('div');
-      flow.className = 'sortable-flow';
-      form.appendChild(flow);
+      const listContainer = document.createElement('div');
+      listContainer.className = 'sortable-list';
+      form.appendChild(listContainer);
 
-      // 创建可排序项
-      let dragItem = null;
-      let currentOrder = [...options];
+      // 状态管理
+      let draggedItem = null;
+      let phantomPlaceholder = null;
+      let currentOrder = [...filteredOptions];
 
-      const createItem = (text) => {
+      // 创建可拖拽项
+      const createSortableItem = (text) => {
         const item = document.createElement('div');
         item.className = 'sortable-item';
         item.draggable = true;
         item.textContent = text;
 
-        // 拖拽事件处理
         item.addEventListener('dragstart', handleDragStart);
         item.addEventListener('dragover', handleDragOver);
         item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragleave', handleDragLeave);
 
         return item;
       };
 
-      // 初始化网格
-      options.forEach(option => {
-        flow.appendChild(createItem(option));
+      // 初始化列表
+      filteredOptions.forEach(option => {
+        listContainer.appendChild(createSortableItem(option));
       });
 
       // 拖拽处理函数
-      function handleDragStart(e) {
-        dragItem = this;
+      const handleDragStart = function(e) {
+        draggedItem = this;
         setTimeout(() => this.classList.add('dragging'), 0);
-      }
+        e.dataTransfer.effectAllowed = 'move';
+      };
 
-      function handleDragOver(e) {
+      const handleDragOver = function(e) {
         e.preventDefault();
-        const afterElement = getDragAfterElement(grid, e.clientY);
-        const currentPos = [...grid.children].indexOf(dragItem);
-        let newPos = [...grid.children].indexOf(afterElement);
+        if (!draggedItem) return;
 
-        if (afterElement == null) {
-          flow.appendChild(dragItem);
-        } else {
-          flow.insertBefore(dragItem, afterElement);
-        }
-      }
-
-      function handleDragEnd() {
-        this.classList.remove('dragging');
-        dragItem = null;
-        // 根据当前 grid 中所有项的顺序更新 currentOrder
-        currentOrder = Array.from(flow.children).map(child => flow.textContent);
-      }
-
-      // 计算插入位置
-      function getDragAfterElement(container, y) {
-        const elements = [...container.querySelectorAll('.sortable-item:not(.dragging)')];
+        // 计算插入位置
+        const items = Array.from(listContainer.children)
+          .filter(item => !item.classList.contains('phantom-placeholder'));
+        const dragIndex = items.indexOf(draggedItem);
+        const targetIndex = items.indexOf(this);
         
-        return elements.reduce((closest, child) => {
-          const box = child.getBoundingClientRect();
-          const offset = y - box.top - box.height / 2;
-          
-          if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-          } else {
-            return closest;
-          }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
-      }
+        // 避免自我覆盖
+        if (dragIndex === targetIndex) return;
 
-      // 提交按钮
+        const { y: targetY, height: targetHeight } = this.getBoundingClientRect();
+        const isAfter = e.clientY > targetY + targetHeight / 2;
+
+        // 创建/更新占位符位置
+        if (!phantomPlaceholder) {
+          phantomPlaceholder = document.createElement('div');
+          phantomPlaceholder.className = 'phantom-placeholder';
+          listContainer.insertBefore(phantomPlaceholder, this);
+        }
+        
+        listContainer.insertBefore(
+          phantomPlaceholder, 
+          isAfter ? this.nextSibling : this
+        );
+      };
+
+      const handleDragEnd = function() {
+        // 移动实际元素
+        if (phantomPlaceholder) {
+          listContainer.insertBefore(draggedItem, phantomPlaceholder);
+          phantomPlaceholder.remove();
+          phantomPlaceholder = null;
+        }
+        
+        // 更新当前顺序
+        currentOrder = Array.from(listContainer.children)
+          .filter(item => item.classList.contains('sortable-item'))
+          .map(item => item.textContent);
+        
+        draggedItem.classList.remove('dragging');
+        draggedItem = null;
+      };
+
+      const handleDragLeave = function(e) {
+        if (!listContainer.contains(e.relatedTarget)) {
+          phantomPlaceholder?.remove();
+          phantomPlaceholder = null;
+        }
+      };
+
+      // 提交处理
       const submitButton = document.createElement('button');
       submitButton.type = 'submit';
       submitButton.className = 'submit-btn';
       submitButton.textContent = 'Submit Order';
       form.appendChild(submitButton);
 
-      // 提交处理
-      const submitHandler = (e) => {
+      const handleSubmit = (e) => {
         e.preventDefault();
-
+        
+        // 禁用按钮防止重复提交
         submitButton.disabled = true;
         submitButton.textContent = 'Submitting...';
 
@@ -182,17 +203,21 @@ export const SortableList = {
         });
       };
 
-      form.addEventListener('submit', submitHandler);
+      form.addEventListener('submit', handleSubmit);
       container.appendChild(form);
       element.appendChild(container);
 
+      // 清理函数
       return () => {
-        form.removeEventListener('submit', submitHandler);
+        form.removeEventListener('submit', handleSubmit);
         container.remove();
       };
 
     } catch (error) {
-      console.error("SortableList Component Error:", error.message);
+      console.error("SortableList Error:", error);
+      const errorEl = document.createElement('div');
+      errorEl.textContent = `Error: ${error.message}`;
+      element.appendChild(errorEl);
     }
   }
 };
