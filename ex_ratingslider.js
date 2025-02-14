@@ -15,7 +15,7 @@ export const RatingSlider = {
       if (!Array.isArray(labels) || labels.length < 2) {
         throw new Error("Labels must be an array with at least 2 elements");
       }
-
+      
       // 如果 options 是数组，则过滤掉其中的 "None" 元素
       options = Array.isArray(originalOptions)
         ? originalOptions.filter(item => item !== "None")
