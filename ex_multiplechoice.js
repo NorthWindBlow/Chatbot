@@ -6,16 +6,16 @@ export const MultipleChoice = {
 
   render: ({ trace, element }) => {
     try {
-      const { options, selectionLimit = 999, submitEvent } = trace.payload;
+      let { options, selectionLimit = 999, submitEvent } = trace.payload;
 
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
       }
 
       // 如果 options 是数组，则过滤掉其中的 "None" 元素
-      options = Array.isArray(originalOptions)
-        ? originalOptions.filter(item => item !== "None")
-        : originalOptions;
+      options = Array.isArray(options)
+        ? options.filter(item => item !== "None")
+        : options;
 
       const container = document.createElement('div');
       container.className = 'multiple-choice-container';
