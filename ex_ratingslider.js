@@ -34,7 +34,7 @@ export const RatingSlider = {
       const style = document.createElement('style');
       style.textContent = `
         .rating-slider-container {
-          width: auto;
+          width: 85%;
           max-width: 100%;
           margin: 0 auto;
           padding: 1rem;
@@ -63,7 +63,7 @@ export const RatingSlider = {
         .slider-container {
           flex: 1 1 auto;
           position: relative;
-          height: 20px;
+          height: 30px;
         }
 
         .scale-labels {
@@ -84,11 +84,13 @@ export const RatingSlider = {
         }
 
         .scale-label:first-child {
-          transform: translateX(-10%); /* 首标签左对齐 */
+          left: 0;
+          transform: translateX(0); /* 首标签左对齐 */
         }
 
         .scale-label:last-child {
-          transform: translateX(100%); /* 尾标签右对齐 */
+          left: 100%;
+          transform: translateX(-100%); /* 尾标签右对齐 */
         }
 
         input[type="range"] {
@@ -115,7 +117,7 @@ export const RatingSlider = {
           margin-left: 1rem;
           min-width: 60px;
           text-align: center;
-          font-weight: 600;
+          font-weight: 300;
           color: #007AFF;
           font-size: 1.1em;
         }
