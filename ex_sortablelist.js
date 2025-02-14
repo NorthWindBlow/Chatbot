@@ -23,26 +23,38 @@ export const SortableList = {
       const style = document.createElement('style');
       style.textContent = `
         .sortable-container {
-          max-width: 680px;
+          width: auto;
+          max-width: 100%;
           margin: 1rem auto;
         }
 
-        .sortable-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 12px;
-          margin-bottom: 1.5rem;
+        .sortable-flow {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 15px;
+          margin-bottom: 24px;
+          width: auto;
+          max-width: 100%;
+          justify-content: space-between; /* 智能分配行内空间 */
         }
 
         .sortable-item {
+          position: relative;
           padding: 1rem;
-          background: #f0f5ff;
+          background: transparent;
           border: 2px solid #007AFF;
           border-radius: 8px;
           cursor: move;
           transition: all 0.2s ease;
           user-select: none;
           touch-action: none;
+          white-space: nowrap;
+          max-width: 100%;
+          min-width: min-content;
+          min-height: min-content;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .sortable-item.dragging {
@@ -78,9 +90,9 @@ export const SortableList = {
       container.appendChild(style);
 
       const form = document.createElement('form');
-      const grid = document.createElement('div');
-      grid.className = 'sortable-grid';
-      form.appendChild(grid);
+      const flow = document.createElement('div');
+      flow.className = 'sortable-flow';
+      form.appendChild(flow);
 
       // 创建可排序项
       let dragItem = null;
@@ -118,9 +130,9 @@ export const SortableList = {
         let newPos = [...grid.children].indexOf(afterElement);
 
         if (afterElement == null) {
-          grid.appendChild(dragItem);
+          flow.appendChild(dragItem);
         } else {
-          grid.insertBefore(dragItem, afterElement);
+          flow.insertBefore(dragItem, afterElement);
         }
 
         // 更新顺序数组
