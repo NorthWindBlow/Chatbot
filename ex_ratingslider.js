@@ -88,7 +88,7 @@ export const RatingSlider = {
         }
 
         .scale-label:last-child {
-          transform: translateX(10%); /* 尾标签右对齐 */
+          transform: translateX(100%); /* 尾标签右对齐 */
         }
 
         input[type="range"] {
