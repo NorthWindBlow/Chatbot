@@ -81,7 +81,7 @@ export const RatingSlider = {
           font-size: 0.85em;
           color: #666;
           white-space: nowrap;
-          top: -20px;
+          top: -50px;
         }
 
         .scale-label:first-child {
