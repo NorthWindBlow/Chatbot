@@ -120,6 +120,8 @@ export const RatingSlider = {
           font-weight: 300;
           color: #007AFF;
           font-size: 1.1em;
+          position: relative;
+          top: -10px; /* 向上移动 10 像素 */
         }
 
         .submit-btn {
