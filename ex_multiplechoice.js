@@ -12,6 +12,11 @@ export const MultipleChoice = {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
       }
 
+      // 如果 options 是数组，则过滤掉其中的 "None" 元素
+      const options = Array.isArray(originalOptions)
+        ? originalOptions.filter(item => item !== "None")
+        : originalOptions;
+
       const container = document.createElement('div');
       container.className = 'multiple-choice-container';
 
