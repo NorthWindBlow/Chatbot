@@ -6,7 +6,7 @@ export const RatingSlider = {
 
   render: ({ trace, element }) => {
     try {
-      const { options, labels = [1, 100], submitEvent } = trace.payload;
+      let { options, labels = [1, 100], submitEvent } = trace.payload;
       
       // 输入验证
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
