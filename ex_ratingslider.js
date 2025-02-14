@@ -46,21 +46,24 @@ export const RatingSlider = {
           align-items: center;
           margin: 2rem 0;
           position: relative;
-          width: auto;
+          width: 85%;
           max-width: 100%;
         }
 
         .option-label {
-          flex: 0 0 120px;
+          flex: 0 0 auto;
           margin-right: 1rem;
           font-weight: 500;
           color: #333;
+          max-width: 50%;
+          white-space: normal;
+          word-break: break-word;
         }
 
         .slider-container {
-          flex: 1;
+          flex: 1 1 auto;
           position: relative;
-          height: 60px;
+          height: 20px;
         }
 
         .scale-labels {
@@ -100,8 +103,8 @@ export const RatingSlider = {
 
         input[type="range"]::-webkit-slider-thumb {
           -webkit-appearance: none;
-          width: 24px;
-          height: 24px;
+          width: 16px;
+          height: 16px;
           background: #007AFF;
           border-radius: 50%;
           cursor: pointer;
