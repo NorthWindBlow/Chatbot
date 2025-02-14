@@ -39,7 +39,6 @@ export const RatingSlider = {
           margin: 0 auto;
           padding: 1rem;
           font-family: -apple-system, sans-serif;
-          border-color: #EBF1DF;
         }
 
         .option-row {
@@ -49,7 +48,6 @@ export const RatingSlider = {
           position: relative;
           width: 100%;
           max-width: 100%;
-          border-color: #EBC37DE;
         }
 
         .option-label {
@@ -63,7 +61,7 @@ export const RatingSlider = {
         }
 
         .slider-container {
-          flex: 1 1 auto;
+          flex: 1;
           position: relative;
           height: 30px;
         }
@@ -83,7 +81,7 @@ export const RatingSlider = {
           font-size: 0.85em;
           color: #666;
           white-space: nowrap;
-          top: -10px;
+          top: 10px;
         }
 
         .scale-label:first-child {
