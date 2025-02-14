@@ -13,7 +13,7 @@ export const MultipleChoice = {
       }
 
       // 如果 options 是数组，则过滤掉其中的 "None" 元素
-      const options = Array.isArray(originalOptions)
+      options = Array.isArray(originalOptions)
         ? originalOptions.filter(item => item !== "None")
         : originalOptions;
 
