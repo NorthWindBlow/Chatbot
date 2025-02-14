@@ -17,9 +17,9 @@ export const RatingSlider = {
       }
       
       // 如果 options 是数组，则过滤掉其中的 "None" 元素
-      options = Array.isArray(originalOptions)
-        ? originalOptions.filter(item => item !== "None")
-        : originalOptions;
+      options = Array.isArray(options)
+        ? options.filter(item => item !== "None")
+        : options;
 
 
       // 生成刻度位置
