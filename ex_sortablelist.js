@@ -6,11 +6,16 @@ export const SortableList = {
 
   render: ({ trace, element }) => {
     try {
-      const { options, submitEvent } = trace.payload;
+      let { options, submitEvent } = trace.payload;
       
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
       }
+
+      // 如果 options 是数组，则过滤掉其中的 "None" 元素
+      options = Array.isArray(options)
+        ? options.filter(item => item !== "None")
+        : options;
 
       const container = document.createElement('div');
       container.className = 'sortable-container';
