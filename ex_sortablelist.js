@@ -37,6 +37,7 @@ export const SortableList = {
           width: auto;
           max-width: 100%;
           justify-content: flex-start;
+          align-items: flex-start; /* 防止行内选项因占位元素而拉高 */
         }
         .sortable-item {
           position: relative;
@@ -186,13 +187,13 @@ export const SortableList = {
       const submitButton = document.createElement("button");
       submitButton.type = "submit";
       submitButton.className = "submit-btn";
-      submitButton.textContent = "Submit Order";
+      submitButton.textContent = "Submit";
       formElement.appendChild(submitButton);
 
       const handleSubmit = (e) => {
         e.preventDefault();
         submitButton.disabled = true;
-        submitButton.textContent = "Submitting...";
+        submitButton.textContent = "Submitted";
 
         window.voiceflow.chat.interact({
           type: submitEvent,
