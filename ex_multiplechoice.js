@@ -31,8 +31,8 @@ export const MultipleChoice = {
           gap: 15px;
           margin-bottom: 24px;
           width: auto;
-          max-width: 85%;
-          justify-content: flex-start; /* 左对齐防止间隙不均 */
+          max-width: 100%;
+          justify-content: space-between; /* 智能分配行内空间 */
           background: #2196f3;
         }
         .option {
