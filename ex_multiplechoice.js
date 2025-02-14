@@ -26,7 +26,7 @@ export const MultipleChoice = {
         .multiple-choice-container {
           width: auto;
           max-width: 100%;
-          margin: 0.5rem 0.5rem;
+          margin: 1rem auto;
           padding: 10px 10px 10px; /* 上10 左右10 下10 */
         }
         .options-flow {
@@ -36,7 +36,7 @@ export const MultipleChoice = {
           margin-bottom: 24px;
           width: auto;
           max-width: 100%;
-          justify-content: space-between; /* 智能分配行内空间 */
+          justify-content: flex-start; /* 智能分配行内空间 */
         }
         .option {
           position: relative;
