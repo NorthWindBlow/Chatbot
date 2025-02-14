@@ -118,8 +118,11 @@ export const SortableList = {
         // 创建占位元素，并设置相同的宽高
         placeholderItem = document.createElement("div");
         placeholderItem.className = "sortable-item placeholder";
-        placeholderItem.style.width = `${dragItem.offsetWidth}px`;
-        placeholderItem.style.height = `${dragItem.offsetHeight}px`;
+        const rect = dragItem.getBoundingClientRect();
+        // placeholderItem.style.width = `${dragItem.offsetWidth}px`;
+        // placeholderItem.style.height = `${dragItem.offsetHeight}px`;
+        placeholderItem.style.width = `${rect.width}px`;
+        placeholderItem.style.height = `${rect.height}px`;
 
         // 将占位元素插入到当前项后面
         sortableList.insertBefore(placeholderItem, dragItem.nextSibling);
