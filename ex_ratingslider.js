@@ -46,7 +46,7 @@ export const RatingSlider = {
           align-items: center;
           margin: 2rem 0;
           position: relative;
-          width: 85%;
+          width: 100%;
           max-width: 100%;
         }
 
@@ -55,7 +55,7 @@ export const RatingSlider = {
           margin-right: 1rem;
           font-weight: 500;
           color: #333;
-          max-width: 50%;
+          width: 120px; /* 固定宽度，确保每一行相同 */
           white-space: normal;
           word-break: break-word;
         }
