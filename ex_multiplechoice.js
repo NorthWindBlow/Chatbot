@@ -192,7 +192,15 @@ export const MultipleChoice = {
 
         if (hasOtherOption && selectedOptions.includes("Other")) {
           const otherValue = form.querySelector('#other-option').value.trim();
-          if (otherValue) selectedOptions.push(otherValue);
+          // 去除 "Other"
+          const index = selectedOptions.indexOf("Other");
+          if (index > -1) {
+            selectedOptions.splice(index, 1);
+          }
+          // 如果有值，则添加 "Other: {otherValue}"
+          if (otherValue) {
+            selectedOptions.push(`Other: ${otherValue}`);
+          }
         }
 
         if (selectedOptions.length === 0) {
