@@ -114,7 +114,7 @@ export const SortableList = {
 
       // 初始化网格
       options.forEach(option => {
-        grid.appendChild(createItem(option));
+        flow.appendChild(createItem(option));
       });
 
       // 拖拽处理函数
@@ -134,15 +134,13 @@ export const SortableList = {
         } else {
           flow.insertBefore(dragItem, afterElement);
         }
-
-        // 更新顺序数组
-        currentOrder.splice(currentPos, 1);
-        currentOrder.splice(newPos, 0, dragItem.textContent);
       }
 
       function handleDragEnd() {
         this.classList.remove('dragging');
         dragItem = null;
+        // 根据当前 grid 中所有项的顺序更新 currentOrder
+        currentOrder = Array.from(flow.children).map(child => flow.textContent);
       }
 
       // 计算插入位置
