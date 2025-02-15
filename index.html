@@ -74,6 +74,7 @@
       import { MultipleChoice } from './ex_multiplechoice.js';
       import { RatingSlider } from './ex_ratingslider.js';
       import { SortableList } from './ex_sortablelist.js';
+      import { ImageGenerator } from './ex_imagegeneration.js';
 
       (function (d, t) {
         var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
@@ -90,7 +91,7 @@
             allowDangerousHTML: true,
             assistant: {
               extensions: [
-                MultipleChoice, RatingSlider, SortableList,
+                MultipleChoice, RatingSlider, SortableList, ImageGenerator,
               ],
               title: 'ARTM Agent',
               persistence: 'memory', //'sessionStorage',
