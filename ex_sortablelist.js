@@ -97,6 +97,11 @@ export const SortableList = {
           background: #808080;
           cursor: not-allowed;
         }
+        /* 提交后禁用所有控件 */
+        .submitted {
+          pointer-events: none;
+          opacity: 0.8;
+        }
       `;
       container.appendChild(style);
 
@@ -144,7 +149,7 @@ export const SortableList = {
             btn.dataset.slotIndex = index;
             btn.addEventListener("dragstart", handleDragStart);
             btn.addEventListener("dragend", handleDragEnd);
-            // 也允许在按钮上拖拽以便在目标区域内重新排序
+            // 同样允许在按钮上拖拽以便在目标区域内重新排序
             btn.addEventListener("dragover", handleTargetDragOver);
             btn.addEventListener("dragleave", handleDragLeave);
             btn.addEventListener("drop", handleTargetDrop);
@@ -171,7 +176,7 @@ export const SortableList = {
       renderTarget();
       renderSource();
 
-      // 拖拽开始时：记录拖拽项、来源及索引，添加拖拽样式
+      // 拖拽开始：记录拖拽项、来源及索引，添加拖拽样式
       function handleDragStart(e) {
         const isSource = this.dataset.sourceIndex !== undefined;
         const isTarget = this.dataset.slotIndex !== undefined;
@@ -182,9 +187,8 @@ export const SortableList = {
           element: this
         };
         this.classList.add("dragging");
-        // 注意：对于目标区域的按钮，不再立即清空槽位，
-        // 这样拖拽时按钮不会消失，而是在 drop 时再更新状态
-        // 如果需要自定义拖拽图像，可使用 e.dataTransfer.setDragImage(...)
+        // 注意：对于目标区域的按钮，不再拖拽时立即清空槽位，
+        // drop 时再更新状态，这样拖拽过程中按钮不会自动消失
       }
 
       function handleDragEnd(e) {
@@ -215,7 +219,7 @@ export const SortableList = {
             // 从来源区域拖入：删除对应项
             sourceItems.splice(draggedData.index, 1);
           } else if (draggedData.origin === "target") {
-            // 从目标区域内拖动：若放到非原位置则清空原槽位
+            // 如果是目标区域内重新排序，若放到非原位置则清空原槽位
             if (dropIndex !== draggedData.index) {
               targetSlots[draggedData.index] = null;
             }
@@ -259,12 +263,20 @@ export const SortableList = {
         renderTarget();
       });
 
-      // 提交时合并目标区域与来源区域的顺序
+      // 提交处理：检查所有目标槽位是否都已填满，若不全填满则提示，不允许提交
       const handleSubmit = (e) => {
         e.preventDefault();
+        // 检查 targetSlots 中是否还有空槽
+        if (targetSlots.some(item => item === null)) {
+          alert("请将所有占位框填满后再提交！");
+          return;
+        }
+        // 提交后禁用所有控件
         submitButton.disabled = true;
         submitButton.textContent = "Submitted";
-        const sortedOptions = targetSlots.filter(item => item !== null).concat(sourceItems);
+        container.classList.add("submitted");
+
+        const sortedOptions = targetSlots.concat(sourceItems);
         window.voiceflow.chat.interact({
           type: submitEvent,
           payload: {
@@ -287,3 +299,4 @@ export const SortableList = {
     }
   }
 };
+
