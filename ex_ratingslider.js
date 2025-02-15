@@ -1,13 +1,13 @@
 export const RatingSlider = {
   name: 'RatingSlider',
   type: 'response',
-  match: ({ trace }) => 
+  match: ({ trace }) =>
     trace.type === 'rating_slider' || trace.payload.name === 'rating_slider',
 
   render: ({ trace, element }) => {
     try {
       let { options, labels = [1, 100], submitEvent } = trace.payload;
-      
+
       // 输入验证
       if (!Array.isArray(options) || options.length === 0 || !submitEvent) {
         throw new Error("Missing required parameters");
@@ -15,29 +15,29 @@ export const RatingSlider = {
       if (!Array.isArray(labels) || labels.length < 2) {
         throw new Error("Labels must be an array with at least 2 elements");
       }
-      
+
       // 如果 options 是数组，则过滤掉其中的 "None" 元素
       options = Array.isArray(options)
         ? options.filter(item => item !== "None")
         : options;
 
-
       // 生成刻度位置
-      const labelPositions = labels.map((_, i) => 
+      const labelPositions = labels.map((_, i) =>
         Math.round((i / (labels.length - 1)) * 100)
       );
 
       const container = document.createElement('div');
       container.className = 'rating-slider-container';
 
-      // 样式定义
+      // 样式定义：容器宽度设为 100%，并使用 box-sizing 保证充分利用父容器空间
       const style = document.createElement('style');
       style.textContent = `
         .rating-slider-container {
-          width: auto;
+          width: 100%;
           max-width: 100%;
-          margin: 0 auto;
+          margin: 0;
           padding: 1rem;
+          box-sizing: border-box;
           font-family: -apple-system, sans-serif;
         }
 
@@ -47,7 +47,6 @@ export const RatingSlider = {
           margin: 2rem 0;
           position: relative;
           width: 100%;
-          max-width: 100%;
         }
 
         .option-label {
@@ -55,7 +54,7 @@ export const RatingSlider = {
           margin-right: 1rem;
           font-weight: 500;
           color: #333;
-          width: 120px; /* 固定宽度，确保每一行相同 */
+          width: 120px; /* 固定宽度，确保每一行一致 */
           white-space: normal;
           word-break: break-word;
         }
@@ -86,12 +85,12 @@ export const RatingSlider = {
 
         .scale-label:first-child {
           left: 0;
-          transform: translateX(0); /* 首标签左对齐 */
+          transform: translateX(0);
         }
 
         .scale-label:last-child {
           left: 100%;
-          transform: translateX(-100%); /* 尾标签右对齐 */
+          transform: translateX(-100%);
         }
 
         input[type="range"] {
@@ -122,12 +121,12 @@ export const RatingSlider = {
           color: #007AFF;
           font-size: 1.1em;
           position: relative;
-          top: -10px; /* 向上移动 10 像素 */
+          top: -10px;
         }
 
         .submit-btn {
           display: block;
-          margin: 1rem auto 0.5rem auto; /* 上边距2rem，底边距0.5rem */
+          margin: 1rem auto 0.5rem auto;
           padding: 12px 36px;
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
@@ -150,19 +149,19 @@ export const RatingSlider = {
       `;
       container.appendChild(style);
 
-      // 工具函数：找到最近刻度
+      // 工具函数：找到最近的刻度
       const findNearestPosition = (value) => {
-        return labelPositions.reduce((prev, curr) => 
+        return labelPositions.reduce((prev, curr) =>
           Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
         );
       };
 
-      // 工具函数：获取标签索引
+      // 工具函数：获取对应的标签索引
       const getLabelIndex = (value) => {
         return labelPositions.findIndex(pos => pos === value);
       };
 
-      // 创建主滑块行
+      // 创建每个选项的滑块行
       options.forEach(option => {
         const row = document.createElement('div');
         row.className = 'option-row';
@@ -181,32 +180,23 @@ export const RatingSlider = {
         slider.max = 100;
         slider.value = 50;
 
-        // 刻度标签
+        // 刻度标签（只显示首尾）
         const scaleLabels = document.createElement('div');
         scaleLabels.className = 'scale-labels';
-        //labels.forEach((text, i) => {
-        //  const span = document.createElement('span');
-        //  span.className = 'scale-label';
-        //  span.textContent = text;
-        //  span.style.left = `${labelPositions[i]}%`;
-        //  scaleLabels.appendChild(span);
-        //});
         const firstLabel = document.createElement('span');
         firstLabel.className = 'scale-label';
         firstLabel.textContent = labels[0];
         const lastLabel = document.createElement('span');
         lastLabel.className = 'scale-label';
         lastLabel.textContent = labels[labels.length - 1];
-
         scaleLabels.appendChild(firstLabel);
         scaleLabels.appendChild(lastLabel);
-        
 
         // 数值显示
         const valueDisplay = document.createElement('div');
         valueDisplay.className = 'value-display';
-        
-        // 更新显示
+
+        // 更新显示及对滑块值进行“吸附”
         const updateDisplay = (value) => {
           const snapValue = findNearestPosition(value);
           const labelIndex = getLabelIndex(snapValue);
@@ -233,9 +223,10 @@ export const RatingSlider = {
       const submitButton = document.createElement('button');
       submitButton.className = 'submit-btn';
       submitButton.textContent = 'Submit';
-      
+
       submitButton.onclick = (e) => {
         e.preventDefault();
+
         const results = Array.from(container.querySelectorAll('.option-row')).map(row => {
           const value = parseInt(row.querySelector('input').value);
           return {
@@ -253,6 +244,8 @@ export const RatingSlider = {
           }
         });
 
+        // 提交后禁用所有滑块和提交按钮
+        container.querySelectorAll('input[type="range"]').forEach(input => input.disabled = true);
         submitButton.disabled = true;
         submitButton.textContent = 'Submitted';
       };
