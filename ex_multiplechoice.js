@@ -15,11 +15,11 @@ export const MultipleChoice = {
       // 过滤掉 "None" 元素
       options = options.filter(item => item !== "None");
 
-      // 创建整体容器和样式
+      // 创建整体容器
       const container = document.createElement('div');
       container.className = 'multiple-choice-container';
 
-      // 样式定义
+      // 使用 CSS Grid 实现选项的灵活排列
       const style = document.createElement('style');
       style.textContent = `
         .multiple-choice-container {
@@ -32,17 +32,16 @@ export const MultipleChoice = {
           font-family: sans-serif;
         }
         .options-flow {
-          display: flex;
-          flex-wrap: wrap;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
           gap: 15px;
           width: auto;
           max-width: 100%;
-          justify-content: center;
+          justify-items: center;
           align-items: center;
           min-height: 100px;
           border: 1px solid #ccc;
           padding: 10px;
-          border-radius: 8px;
         }
         .option {
           position: relative;
@@ -111,23 +110,43 @@ export const MultipleChoice = {
           margin-bottom: 1rem;
         }
         .other-input input {
-          width: 100%;
+          width: 90%;
           padding: 0.5rem;
           border: 1px solid #d2d2d7;
           border-radius: 8px;
           margin-top: 0.2rem;
         }
+        /* 提交后禁用所有控件 */
+        .submitted {
+          pointer-events: none;
+          opacity: 0.8;
+        }
       `;
       container.appendChild(style);
       element.appendChild(container);
 
+      // 创建表单
       const form = document.createElement('form');
       form.className = 'mc-form';
       container.appendChild(form);
 
+      // 创建选项容器
       const flowContainer = document.createElement('div');
       flowContainer.className = 'options-flow';
       form.appendChild(flowContainer);
+
+      // 根据选中数量更新复选框状态
+      const updateCheckboxState = () => {
+        const checkboxes = Array.from(form.querySelectorAll('input[name="option"]'));
+        const checkedCount = checkboxes.filter(cb => cb.checked).length;
+        checkboxes.forEach(cb => {
+          if (!cb.checked) {
+            cb.disabled = checkedCount >= selectionLimit;
+          } else {
+            cb.disabled = false;
+          }
+        });
+      };
 
       // 创建选项
       options.forEach(option => {
@@ -138,7 +157,6 @@ export const MultipleChoice = {
           <span class="option-text">${option}</span>
         `;
         const input = label.querySelector('input');
-        // 监听选中状态变化，更新样式并检查选择数量限制
         input.addEventListener('change', () => {
           label.classList.toggle('selected', input.checked);
           updateCheckboxState();
@@ -146,20 +164,9 @@ export const MultipleChoice = {
         flowContainer.appendChild(label);
       });
 
-      // 自动调整布局
-      const adjustLayout = () => {
-        const containerWidth = container.offsetWidth;
-        const parentWidth = container.parentElement.offsetWidth;
-        flowContainer.style.gridTemplateColumns = containerWidth >= parentWidth 
-          ? 'repeat(auto-fill, minmax(min-content, 1fr))'
-          : 'repeat(auto-fit, minmax(120px, max-content))';
-      };
-      adjustLayout();
-      window.addEventListener('resize', adjustLayout);
-
       // “Other”选项处理
       const hasOtherOption = options.includes("Other");
-      let otherInputContainer;
+      let otherInputContainer = null;
       if (hasOtherOption) {
         otherInputContainer = document.createElement('div');
         otherInputContainer.className = 'other-input';
@@ -168,26 +175,16 @@ export const MultipleChoice = {
         `;
         form.appendChild(otherInputContainer);
         const otherCheckbox = form.querySelector('input[value="Other"]');
-        otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
-        otherCheckbox.addEventListener('change', () => {
+        if (otherCheckbox) {
           otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
-          updateCheckboxState();
-        });
+          otherCheckbox.addEventListener('change', () => {
+            otherInputContainer.style.display = otherCheckbox.checked ? 'block' : 'none';
+            updateCheckboxState();
+          });
+        }
       }
 
-      // 根据已选数量更新其他选项的禁用状态
-      const updateCheckboxState = () => {
-        const checkboxes = Array.from(form.querySelectorAll('input[name="option"]'));
-        const checkedCount = checkboxes.filter(cb => cb.checked).length;
-        // 当达到上限时，禁用未选中的复选框，否则恢复可用状态
-        checkboxes.forEach(cb => {
-          if (!cb.checked) {
-            cb.disabled = checkedCount >= selectionLimit;
-          }
-        });
-      };
-
-      // 提交按钮
+      // 添加提交按钮
       const submitButton = document.createElement('button');
       submitButton.type = 'submit';
       submitButton.textContent = 'Submit';
@@ -197,18 +194,12 @@ export const MultipleChoice = {
       const submitHandler = (event) => {
         event.preventDefault();
 
-        // 获取所有选中的选项（包括 “Other” 选项）
         let selectedOptions = Array.from(form.querySelectorAll('input[name="option"]:checked'))
           .map(cb => cb.value);
 
         if (hasOtherOption && selectedOptions.includes("Other")) {
           const otherValue = form.querySelector('#other-option').value.trim();
-          // 去除 "Other"
-          const index = selectedOptions.indexOf("Other");
-          if (index > -1) {
-            selectedOptions.splice(index, 1);
-          }
-          // 如果有值，则添加 "Other: {otherValue}"
+          selectedOptions = selectedOptions.filter(value => value !== "Other");
           if (otherValue) {
             selectedOptions.push(`Other: ${otherValue}`);
           }
@@ -219,15 +210,14 @@ export const MultipleChoice = {
           return;
         }
 
-        // 禁用所有输入控件，防止重复提交
         form.querySelectorAll('input, button').forEach(el => el.disabled = true);
         submitButton.textContent = 'Submitted';
-        submitButton.style.backgroundColor = '#808080';
+        container.classList.add("submitted");
 
         window.voiceflow.chat.interact({
           type: submitEvent,
           payload: {
-            selectedOptions: selectedOptions,
+            selectedOptions,
             confirmation: 'Options submitted successfully'
           }
         });
@@ -235,9 +225,8 @@ export const MultipleChoice = {
 
       form.addEventListener('submit', submitHandler);
 
-      // 清理工作
+      // 返回清理函数
       return () => {
-        window.removeEventListener('resize', adjustLayout);
         form.removeEventListener('submit', submitHandler);
         container.remove();
       };
@@ -247,3 +236,4 @@ export const MultipleChoice = {
     }
   }
 };
+
