@@ -12,11 +12,10 @@ export const MultipleChoice = {
         throw new Error("Missing required input variables: options (non-empty array) or submitEvent");
       }
 
-      // 如果 options 是数组，则过滤掉其中的 "None" 元素
-      options = Array.isArray(options)
-        ? options.filter(item => item !== "None")
-        : options;
+      // 过滤掉 "None" 元素
+      options = options.filter(item => item !== "None");
 
+      // 创建整体容器和样式
       const container = document.createElement('div');
       container.className = 'multiple-choice-container';
 
@@ -27,16 +26,23 @@ export const MultipleChoice = {
           width: auto;
           max-width: 100%;
           margin: 1rem auto;
-          padding: 10px 10px 10px; /* 上10 左右10 下10 */
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          font-family: sans-serif;
         }
         .options-flow {
           display: flex;
           flex-wrap: wrap;
           gap: 15px;
-          margin-bottom: 24px;
           width: auto;
           max-width: 100%;
-          justify-content: flex-start; /* 智能分配行内空间 */
+          justify-content: center;
+          align-items: center;
+          min-height: 100px;
+          border: 1px solid #ccc;
+          padding: 10px;
+          border-radius: 8px;
         }
         .option {
           position: relative;
