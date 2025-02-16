@@ -32,8 +32,8 @@ export const MultipleChoice = {
           font-family: sans-serif;
         }
         .options-flow {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          display: flex;
+          flex-wrap: wrap;
           gap: 15px;
           width: auto;
           max-width: 100%;
@@ -78,15 +78,6 @@ export const MultipleChoice = {
           text-overflow: ellipsis;
           max-width: 100%;
           white-space: nowrap;
-        }
-        @media (max-width: 768px) {
-          .option {
-            white-space: normal;
-            word-break: break-word;
-          }
-          .options-flow {
-            grid-template-columns: 1fr;
-          }
         }
         .mc-form button[type="submit"] {
           background: linear-gradient(135deg, #007AFF, #0063CC);
