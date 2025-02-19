@@ -40,7 +40,7 @@ export const MultipleChoice = {
           justify-items: center;
           align-items: center;
           min-height: 100px;
-          border: 0px solid #ccc;
+          border: none;
           padding: 10px;
         }
         .option {
@@ -96,12 +96,20 @@ export const MultipleChoice = {
           transform: translateY(-1px);
           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+        .mc-form button[type="submit"]:disabled {
+          background: #999;
+          cursor: not-allowed;
+        }
+        .mc-form button[type="submit"]:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
         .other-input {
           margin-top: 0.5rem;
           margin-bottom: 1rem;
         }
         .other-input input {
-          width: 90%;
+          width: 95%;
           padding: 0.5rem;
           border: 1px solid #d2d2d7;
           border-radius: 8px;
