@@ -40,7 +40,7 @@ export const MultipleChoice = {
           justify-items: center;
           align-items: center;
           min-height: 100px;
-          border: 1px solid #ccc;
+          border: 0px solid #ccc;
           padding: 10px;
         }
         .option {
