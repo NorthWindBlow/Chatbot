@@ -44,7 +44,7 @@ export const MultipleChoice = {
           padding: 10px;
         }
         .option {
-          withd: fit-content;
+          width: fit-content;
           position: relative;
           padding: 0.5rem 1.5rem;
           font-size: 1rem;
