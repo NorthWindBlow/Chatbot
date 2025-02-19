@@ -84,8 +84,9 @@ export const SortableList = {
         .submit-btn {
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
+          width: fit-content;
           border: none;
-          padding: 0.75rem 2rem;
+          padding: 0.5rem 1.5rem;
           border-radius: 8px;
           font-size: 1rem;
           cursor: pointer;
@@ -96,6 +97,10 @@ export const SortableList = {
         .submit-btn:disabled {
           background: #808080;
           cursor: not-allowed;
+        }
+        .submit-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,122,255,0.3);
         }
         /* 提交后禁用所有控件 */
         .submitted {
