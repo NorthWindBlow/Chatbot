@@ -45,7 +45,7 @@ export const RatingSlider = {
         .option-row {
           display: flex;
           align-items: center;
-          margin: 0rem 0;
+          margin: 0rem 1rem;
           position: relative;
           width: 100%;
         }
