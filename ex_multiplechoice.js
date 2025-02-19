@@ -25,10 +25,10 @@ export const MultipleChoice = {
         .multiple-choice-container {
           width: auto;
           max-width: 100%;
-          margin: 1rem auto;
+          margin: 0rem 0rem;
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 10px;
           font-family: sans-serif;
         }
         .options-flow {
