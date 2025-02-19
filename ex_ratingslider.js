@@ -38,7 +38,6 @@ export const RatingSlider = {
           margin: 0;
           padding: 1rem;
           box-sizing: border-box;
-          gap: 10px;
           font-family: -apple-system, sans-serif;
         }
 
