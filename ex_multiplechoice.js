@@ -44,8 +44,11 @@ export const MultipleChoice = {
           padding: 10px;
         }
         .option {
+          withd: fit-content;
           position: relative;
-          padding: 0.6rem 1rem;
+          padding: 0.5rem 1.5rem;
+          font-size: 1rem;
+          margin: 0 auto;
           border: 1px solid #d2d2d7;
           border-radius: 8px;
           cursor: pointer;
@@ -55,7 +58,7 @@ export const MultipleChoice = {
           max-width: 100%;
           min-width: min-content;
           min-height: min-content;
-          display: flex;
+          display: block;
           align-items: center;
           justify-content: center;
         }
