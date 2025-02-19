@@ -76,7 +76,7 @@ export const MultipleChoice = {
         }
         .option-text {
           display: block;
-          line-height: 1.3;
+          line-height: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           max-width: 100%;
