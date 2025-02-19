@@ -55,7 +55,7 @@ export const RatingSlider = {
           margin-right: 1rem;
           font-weight: 500;
           color: #333;
-          width: fit-context; /* 固定宽度，确保每一行一致 */
+          width: fit-content; /* 固定宽度，确保每一行一致 */
           max-width: 40%;
           white-space: normal;
           word-break: break-word;
