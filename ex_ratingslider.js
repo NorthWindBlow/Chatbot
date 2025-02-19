@@ -38,13 +38,14 @@ export const RatingSlider = {
           margin: 0;
           padding: 1rem;
           box-sizing: border-box;
+          gap: 10px;
           font-family: -apple-system, sans-serif;
         }
 
         .option-row {
           display: flex;
           align-items: center;
-          margin: 2rem 0;
+          margin: 0rem 0;
           position: relative;
           width: 100%;
         }
@@ -126,15 +127,16 @@ export const RatingSlider = {
 
         .submit-btn {
           display: block;
-          margin: 1rem auto 0.5rem auto;
-          padding: 12px 36px;
+          width: fit-content;
+          margin: 0 auto;
+          padding: 0.5rem 1.5rem;
           background: linear-gradient(135deg, #007AFF, #0063CC);
           color: white;
           border: none;
           border-radius: 8px;
-          font-size: 1.1em;
+          font-size: 1rem;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.2s ease;
         }
 
         .submit-btn:disabled {
