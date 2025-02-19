@@ -38,13 +38,14 @@ export const RatingSlider = {
           margin: 0;
           padding: 1rem;
           box-sizing: border-box;
+          gap: 10px;
           font-family: -apple-system, sans-serif;
         }
 
         .option-row {
           display: flex;
           align-items: center;
-          margin: 0rem 1rem;
+          margin: 2rem 0rem;
           position: relative;
           width: 100%;
         }
