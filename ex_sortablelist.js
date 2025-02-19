@@ -46,10 +46,26 @@ export const SortableList = {
           padding: 10px;
           border-radius: 8px;
         }
+          /* 为source-container添加相对定位以便伪元素定位 */
+        .source-container {
+          position: relative;
+        }
+        /* 在source-container中间显示透明文字 */
+        .source-container::before {
+          content: "Please drag this area button to the above area";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: rgba(0, 0, 0, 0.3);
+          font-size: 1.5rem;
+          pointer-events: none;
+          white-space: nowrap;
+        }
         /* 虚线占位框：居中显示 data-index，字体放大 */
         .placeholder {
           width: 100px;
-          height: 40px;
+          height: 35px;
           border: 2px dashed #007AFF;
           border-radius: 8px;
           display: flex;
