@@ -32,7 +32,7 @@ export const SortableList = {
           margin: 1rem auto;
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 10px;
           font-family: sans-serif;
         }
         .target-container, .source-container {
@@ -49,7 +49,7 @@ export const SortableList = {
         /* 虚线占位框：居中显示 data-index，字体放大 */
         .placeholder {
           width: 100px;
-          height: 50px;
+          height: 40px;
           border: 2px dashed #007AFF;
           border-radius: 8px;
           display: flex;
@@ -64,7 +64,9 @@ export const SortableList = {
         }
         /* 选项按钮样式 */
         .option-btn {
-          padding: 1rem;
+          width: fit-content;
+          padding: 0.5rem 1.5rem;
+          margin: 0 auto;
           background: #007AFF;
           color: white;
           border: none;
