@@ -55,13 +55,17 @@ export const RatingSlider = {
           margin-right: 1rem;
           font-weight: 500;
           color: #333;
-          width: 120px; /* 固定宽度，确保每一行一致 */
+          width: fit-context; /* 固定宽度，确保每一行一致 */
+          max-width: 40%;
           white-space: normal;
           word-break: break-word;
         }
 
         .slider-container {
           flex: 1;
+          width: auto;
+          min-width: 60%;
+          max-width: 100%;
           position: relative;
           height: 30px;
         }
