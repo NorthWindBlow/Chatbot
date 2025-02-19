@@ -48,6 +48,7 @@ export const RatingSlider = {
           margin: 2rem 0rem;
           position: relative;
           width: 100%;
+          max-width: 100%;
         }
 
         .option-label {
@@ -55,7 +56,7 @@ export const RatingSlider = {
           margin-right: 1rem;
           font-weight: 500;
           color: #333;
-          width: fit-content; /* 固定宽度，确保每一行一致 */
+          width: 120px; /* 固定宽度，确保每一行相同 */
           max-width: 40%;
           white-space: normal;
           word-break: break-word;
