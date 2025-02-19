@@ -46,7 +46,7 @@ export const SortableList = {
           padding: 10px;
           border-radius: 8px;
         }
-          /* 为source-container添加相对定位以便伪元素定位 */
+        /* 为source-container添加相对定位以便伪元素定位 */
         .source-container {
           position: relative;
         }
@@ -60,7 +60,10 @@ export const SortableList = {
           color: rgba(0, 0, 0, 0.3);
           font-size: 1.5rem;
           pointer-events: none;
-          white-space: nowrap;
+          z-index: -1;
+          white-space: normal;
+          text-align: center;
+          width: 90%;
         }
         /* 虚线占位框：居中显示 data-index，字体放大 */
         .placeholder {
@@ -291,7 +294,7 @@ export const SortableList = {
         e.preventDefault();
         // 检查 targetSlots 中是否还有空槽
         if (targetSlots.some(item => item === null)) {
-          alert("请将所有占位框填满后再提交！");
+          alert("Please fill in all the placeholders before submitting!");
           return;
         }
         // 提交后禁用所有控件
