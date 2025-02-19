@@ -49,6 +49,7 @@ export const SortableList = {
         /* 为source-container添加相对定位以便伪元素定位 */
         .source-container {
           position: relative;
+          border: none;
         }
         /* 在source-container中间显示透明文字 */
         .source-container::before {
@@ -60,7 +61,7 @@ export const SortableList = {
           color: rgba(0, 0, 0, 0.3);
           font-size: 1.5rem;
           pointer-events: none;
-          z-index: -1;
+          z-index: 0;
           white-space: normal;
           text-align: center;
           width: 90%;
@@ -95,6 +96,7 @@ export const SortableList = {
           white-space: nowrap;
           min-width: 80px;
           text-align: center;
+          z-index: 1;
         }
         .dragging {
           opacity: 0.5;
