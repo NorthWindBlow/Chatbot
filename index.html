@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Survey Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body> 
+    <script type="module">
+      import { MultipleChoice } from './ex_multiplechoice.js';
+      import { RatingSlider } from './ex_ratingslider.js';
+      import { SortableList } from './ex_sortablelist.js';
+      import { ImageGenerator } from './ex_imagegeneration.js';
+
+      (function(d, t) {
+          var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+          v.onload = function() {
+            window.voiceflow.chat.load({
+              verify: { projectID: '67aa9de7f1b2f4adafba5a03' },
+              url: 'https://general-runtime.voiceflow.com',
+              versionID: 'production',
+              voice: {
+                url: "https://runtime-api.voiceflow.com"
+              },
+              assistant: {
+                  extensions: [
+                    MultipleChoice, RatingSlider, SortableList, ImageGenerator,
+                  ],
+              },
+            });
+            setTimeout(function() {
+                window.voiceflow.chat.open(); // Automatically opens the chat after loading
+            }, 1000); // Adjust the timeout if needed (currently set to 1 second)
+          }
+          v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+      })(document, 'script');
+    </script>
+  </body>
+</html>
